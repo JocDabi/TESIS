@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitorear Pagos Realizados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="./img/Recurso 1.png">
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+        /* Estilos para los menús desplegables */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+            min-width: 220px;
+            z-index: 10;
+        }
+        .dropdown-menu a {
+            padding: 0.75rem 1.25rem;
+            display: block;
+            color: #4a5568;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 0.9rem;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f7fafc;
+            color: #1a202c;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+   <nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex w-full">
+                <div class="hidden md:ml-6 md:flex space-x-8">
+                    <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                        <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
+                    </a>
+
+                    <div class="dropdown relative">
+                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                            Transacciones
+                        </button>
+                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                            <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
+                            <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+                        </div>
+                    </div>
+                    <div class="dropdown relative">
+                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                            Reportes y gráficos
+                        </button>
+                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                            <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
+                            <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                        </div>
+<<<<<<< HEAD
+                    </div>
+                    <div class="dropdown relative">
+                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                            Ayuda
+                        </button>
+                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+=======
+                        <div class="dropdown-menu absolute mt-2 right-0 w-48 py-1 bg-white shadow-md origin-top-right focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-0">Tu perfil</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-1">Configuración</a>
+                            <a href="../index.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem" tabindex="-1" id="user-menu-item-2">Cerrar sesión</a>
+>>>>>>> 3a110d0455f11805fe59c0833199e769c22002c2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center">
+                <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                    <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-4">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Monitoreo de Pagos Realizados</h2>
+                </div>
+
+                <div class="p-6">
+
+                    <div class="mb-4 flex space-x-4 items-end">
+                        <div class="relative">
+                            <label for="filtro-fecha-inicio" class="block text-gray-700 text-sm font-bold mb-2">Fecha Inicio:</label>
+                            <input type="date" id="filtro-fecha-inicio" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <div class="relative">
+                            <label for="filtro-fecha-fin" class="block text-gray-700 text-sm font-bold mb-2">Fecha Fin:</label>
+                            <input type="date" id="filtro-fecha-fin" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+
+                        <div class="relative">
+                            <label for="filtro-estado" class="block text-gray-700 text-sm font-bold mb-2">Estado:</label>
+                            <select id="filtro-estado" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <option value="">Todos</option>
+                                <option value="ready_to_be_checked">Lista para verificar</option>
+                                <option value="completed">Completado</option>
+                                <option value="rejected">Rechazado</option>
+                                <option value="in_process">En proceso</option>
+                            </select>
+                        </div>
+
+                        <div class="relative">
+                            <button id="btnFiltrarPagos" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+                                Filtrar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table id="pagosTable" class="min-w-full table-auto border-collapse border border-gray-200">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">ID Pago</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Fecha</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Cliente</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Monto</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Estado</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div id="pagosTablePaginationInfo" class="mt-6 flex justify-between items-center">
+                        <div class="text-gray-700 text-sm">
+                            Cargando...
+                        </div>
+                        <div class="space-x-2">
+                            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 rounded">Anterior</button>
+                            <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 rounded">Siguiente</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+        <p>&copy; 2025 DCM Development. Todos los derechos reservados.</p>
+    </footer>
+
+    <div id="paymentDetailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Detalles del Pago</h3>
+                <div class="mt-2 px-7 py-3 text-left">
+                    <p class="text-sm text-gray-500">
+                        <strong>ID Pago:</strong> <span id="modal-id-pago"></span>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        <strong>Fecha:</strong> <span id="modal-fecha-pago"></span>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        <strong>Monto:</strong> <span id="modal-monto-pago"></span>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        <strong>Descripción:</strong> <span id="modal-descripcion-pago"></span>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        <strong>Método de Pago:</strong> <span id="modal-metodo-pago"></span>
+                    </p>
+                    <p class="text-sm text-gray-500">
+                        <strong>Estado:</strong> <span id="modal-estado-pago"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 mt-4">
+                        <strong>Información del Usuario:</strong>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>Nombre:</strong> <span id="modal-user-name"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>Email:</strong> <span id="modal-user-email"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>Identificación:</strong> <span id="modal-user-id-number"></span>
+                    </p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="closeModalButton" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
+    <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
+            </div>
+            <div class="items-center px-4 py-3">
+                <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
+                    Sí, cerrar sesión
+                </button>
+                <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Referencias a elementos de la interfaz
+            const pagosTableBody = document.querySelector('#pagosTable tbody');
+            const paginationInfoDiv = document.getElementById('pagosTablePaginationInfo');
+            const filtroFechaInicio = document.getElementById('filtro-fecha-inicio');
+            const filtroFechaFin = document.getElementById('filtro-fecha-fin');
+            const filtroEstado = document.getElementById('filtro-estado');
+            const btnFiltrar = document.getElementById('btnFiltrarPagos');
+
+            // --- Referencias del Modal ---
+            const paymentDetailModal = document.getElementById('paymentDetailModal');
+            const closeModalButton = document.getElementById('closeModalButton');
+
+            const modalIdPago = document.getElementById('modal-id-pago');
+            const modalFechaPago = document.getElementById('modal-fecha-pago');
+            const modalMontoPago = document.getElementById('modal-monto-pago');
+            const modalDescripcionPago = document.getElementById('modal-descripcion-pago');
+            const modalMetodoPago = document.getElementById('modal-metodo-pago');
+            const modalEstadoPago = document.getElementById('modal-estado-pago');
+            const modalUserName = document.getElementById('modal-user-name');
+            const modalUserEmail = document.getElementById('modal-user-email');
+            const modalUserIdNumber = document.getElementById('modal-user-id-number');
+            // --- Fin Referencias del Modal ---
+
+            let currentPaymentsData = []; // Variable para almacenar los pagos actualmente cargados
+
+            // Función para mapear el estado del pago a texto legible y clase de color de Tailwind
+            function getStatusDisplay(status) {
+                switch (status) {
+                    case 'ready_to_be_checked':
+                        return { text: 'Lista para verificar', class: 'text-yellow-800 bg-yellow-100' };
+                    case 'completed':
+                        return { text: 'Completado', class: 'text-green-800 bg-green-100' };
+                    case 'rejected':
+                         return { text: 'Rechazado', class: 'text-red-800 bg-red-100' };
+                    case 'in_process':
+                         return { text: 'En proceso', class: 'text-blue-800 bg-blue-100' };
+                    default:
+                        return { text: status || 'Desconocido', class: 'text-gray-800 bg-gray-100' };
+                }
+            }
+
+            // Función para cargar y mostrar los pagos
+            function fetchAndDisplayPayments(filters = {}) {
+                pagosTableBody.innerHTML = `<tr><td colspan="6" class="border border-gray-200 px-4 py-2 text-center text-gray-500">Cargando pagos...</td></tr>`;
+                 if (paginationInfoDiv) {
+                     paginationInfoDiv.querySelector('.text-gray-700').textContent = 'Cargando...';
+                 }
+
+                const apiUrlBase = '../../php/get_pagos.php';
+                const queryParams = new URLSearchParams(filters).toString();
+                const apiUrl = `${apiUrlBase}?${queryParams}`;
+
+
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => { throw new Error(`Error HTTP ${response.status}: ${response.statusText} - ${text}`); });
+                        }
+                        return response.json();
+                    })
+                    .then(response_data => {
+                        // Almacenar los datos cargados en la variable global
+                        currentPaymentsData = response_data.data;
+
+                        pagosTableBody.innerHTML = '';
+
+                        const pagos = response_data.data;
+                        const totalPagos = response_data.total;
+
+                        if (pagos && Array.isArray(pagos) && pagos.length > 0) {
+                            pagos.forEach(pago => {
+                                const row = document.createElement('tr');
+
+                                const idPago = pago.id || 'N/A';
+                                const fecha = pago.createdAt ? pago.createdAt.split('T')[0] : 'N/A';
+                                const cliente = (pago.user && pago.user.firstName && pago.user.lastName) ? `${pago.user.firstName} ${pago.user.lastName}` : (pago.user && pago.user.email) ? pago.user.email : 'Desconocido';
+                                const monto = pago.amount ? `$${parseFloat(pago.amount).toFixed(2)}` : 'N/A';
+                                const estadoInfo = getStatusDisplay(pago.status);
+
+                                row.innerHTML = `
+                                    <td class="border border-gray-200 px-4 py-2">${idPago}</td>
+                                    <td class="border border-gray-200 px-4 py-2">${fecha}</td>
+                                    <td class="border border-gray-200 px-4 py-2">${cliente}</td>
+                                    <td class="border border-gray-200 px-4 py-2">${monto}</td>
+                                    <td class="border border-gray-200 px-4 py-2">
+                                        <span class="inline-block px-2 py-1 text-xs font-semibold leading-tight rounded-full ${estadoInfo.class}">
+                                            ${estadoInfo.text}
+                                        </span>
+                                    </td>
+                                    <td class="border border-gray-200 px-4 py-2">
+                                        <button class="btn-ver-detalle bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs" data-id="${idPago}">Ver Detalle</button>
+                                    </td>
+                                `;
+
+                                pagosTableBody.appendChild(row);
+                            });
+
+                             if (paginationInfoDiv) {
+                                const displayedCount = pagos.length;
+                                const startCount = displayedCount > 0 ? 1 : 0;
+                                paginationInfoDiv.querySelector('.text-gray-700').textContent = `Mostrando ${startCount} a ${displayedCount} de ${totalPagos} pagos`;
+                            }
+
+                            // === Añadir Event Listeners a los botones "Ver Detalle" ===
+                            pagosTableBody.querySelectorAll('.btn-ver-detalle').forEach(button => {
+                                button.addEventListener('click', function() {
+                                    const pagoId = this.getAttribute('data-id');
+                                    displayPaymentDetailsModal(pagoId);
+                                });
+                            });
+
+
+                        } else if (pagos && Array.isArray(pagos) && pagos.length === 0) {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `<td colspan="6" class="border border-gray-200 px-4 py-2 text-center text-gray-500">No se encontraron pagos con los criterios seleccionados.</td></tr>`;
+                            pagosTableBody.appendChild(row);
+                             if (paginationInfoDiv) {
+                                paginationInfoDiv.querySelector('.text-gray-700').textContent = '0 pagos encontrados.';
+                            }
+
+                        } else {
+                            console.error('Respuesta inesperada del servidor:', response_data);
+                             const row = document.createElement('tr');
+                            row.innerHTML = `<td colspan="6" class="border border-gray-200 px-4 py-2 text-center text-red-500">Error: Formato de datos inesperado.</td></tr>`;
+                            pagosTableBody.appendChild(row);
+                             if (paginationInfoDiv) {
+                                paginationInfoDiv.querySelector('.text-gray-700').textContent = '';
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al obtener los pagos:', error);
+                        pagosTableBody.innerHTML = `<tr><td colspan="6" class="border border-gray-200 px-4 py-2 text-center text-red-500">Error al cargar los pagos. Inténtelo de nuevo. Detalles en consola..</td></tr>`;
+                         if (paginationInfoDiv) {
+                            paginationInfoDiv.querySelector('.text-gray-700').textContent = '';
+                        }
+                    });
+            }
+
+            // --- Nueva Función para Mostrar Detalles del Pago en un Modal ---
+            function displayPaymentDetailsModal(pagoId) {
+                const pago = currentPaymentsData.find(p => p.id === pagoId);
+
+                if (pago) {
+                    const estadoInfo = getStatusDisplay(pago.status);
+
+                    modalIdPago.textContent = pago.id || 'N/A';
+                    modalFechaPago.textContent = pago.createdAt ? pago.createdAt.split('T')[0] : 'N/A';
+                    modalMontoPago.textContent = pago.amount ? `$${parseFloat(pago.amount).toFixed(2)}` : 'N/A';
+                    modalDescripcionPago.textContent = pago.description || 'Sin descripción';
+                    modalMetodoPago.textContent = pago.paymentMethod || 'N/A';
+                    modalEstadoPago.textContent = estadoInfo.text;
+
+                    modalUserName.textContent = (pago.user && pago.user.firstName && pago.user.lastName) ? `${pago.user.firstName} ${pago.user.lastName}` : 'Desconocido';
+                    modalUserEmail.textContent = (pago.user && pago.user.email) ? pago.user.email : 'N/A';
+                    modalUserIdNumber.textContent = (pago.user && pago.user.identificationNumber) ? pago.user.identificationNumber : 'N/A';
+
+                    paymentDetailModal.classList.remove('hidden');
+                } else {
+                    alert('No se encontraron detalles para este pago.');
+                    console.warn('Pago con ID ' + pagoId + ' no encontrado en los datos cargados.');
+                }
+            }
+            // --- Fin Nueva Función del Modal ---
+
+            // --- Evento para Cerrar el Modal ---
+            if (closeModalButton) {
+                closeModalButton.addEventListener('click', function() {
+                    paymentDetailModal.classList.add('hidden');
+                });
+            }
+
+            if (paymentDetailModal) {
+                paymentDetailModal.addEventListener('click', function(event) {
+                    if (event.target === paymentDetailModal) {
+                        paymentDetailModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            // === Evento para el botón Filtrar ===
+            if (btnFiltrar) {
+                btnFiltrar.addEventListener('click', function() {
+                    const filters = {
+                        fecha_inicio: filtroFechaInicio.value,
+                        fecha_fin: filtroFechaFin.value,
+                        estado: filtroEstado.value
+                    };
+                    fetchAndDisplayPayments(filters);
+                });
+            }
+
+            // === Llamar a la función para cargar y mostrar los pagos al cargar la página (sin filtros inicialmente) ===
+            fetchAndDisplayPayments();
+        });
+
+            // Lógica para el modal de cerrar sesión
+    const logoutButton = document.getElementById('logout-button');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogoutButton = document.getElementById('confirmLogout');
+    const cancelLogoutButton = document.getElementById('cancelLogout');
+
+    // Mostrar el modal cuando se hace clic en "Cerrar sesión"
+    logoutButton.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+        logoutModal.classList.remove('hidden');
+    });
+
+    // Ocultar el modal cuando se hace clic en "Cancelar"
+    cancelLogoutButton.addEventListener('click', function() {
+        logoutModal.classList.add('hidden');
+    });
+
+    // Ocultar el modal si se hace clic fuera de él (opcional, pero buena UX)
+    logoutModal.addEventListener('click', function(event) {
+        if (event.target === logoutModal) {
+            logoutModal.classList.add('hidden');
+        }
+    });
+
+    // Lógica cuando se confirma el cierre de sesión
+confirmLogoutButton.addEventListener('click', function() {
+        // Aquí iría la lógica real para cerrar la sesión:
+        // - Limpiar cookies/localStorage (ej. tokens de autenticación)
+        // - Redirigir a la página de inicio de sesión o a la página principal.
+
+        // Por ahora, solo simularemos la redirección
+        console.log("Cerrando sesión...");
+        
+        // Redirige a index.php
+        window.location.href = '../index.php'; // Usa './index.php' si está en la misma carpeta raíz o similar
+
+        // Si necesitas limpiar alguna data antes de la redirección, hazlo aquí.
+        // Por ejemplo, para limpiar un token de autenticación en localStorage:
+        // localStorage.removeItem('authToken'); 
+        
+        // El modal se ocultará automáticamente con la redirección,
+        // pero puedes mantener la línea si lo deseas para casos de prueba o si la redirección no ocurre inmediatamente.
+        logoutModal.classList.add('hidden'); 
+    });
+    </script>
+    </script>
+
+</body>
+</html>

@@ -10,11 +10,36 @@ $pagos = json_decode($json, true);
 // Crear PDF
 $pdf = new FPDF();
 $pdf->AddPage();
-$pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Lista de Pagos'), 0, 1, 'C');
-$pdf->Ln(10);
 
-// Encabezados
+// Configurar márgenes
+$pdf->SetMargins(15, 25, 15);
+
+// --- MEMBRETE ---
+// Logo (reemplaza 'logo.png' con la ruta correcta a tu imagen)
+$pdf->Image('../public/img/logo.png', 15, 10, 30); // Ajusta las coordenadas y tamaño según necesites
+
+// Título del reporte
+$pdf->SetY(15); // Posición vertical después del logo
+$pdf->SetFont('Arial', 'B', 16);
+$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'REPORTE DE PAGOS'), 0, 1, 'C');
+
+// Fecha de generación
+$pdf->SetFont('Arial', '', 10);
+$fechaGeneracion = date('d/m/Y H:i:s');
+$pdf->Cell(0, 6, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Generado el: ' . $fechaGeneracion), 0, 1, 'C');
+
+// Línea separadora
+$pdf->SetDrawColor(100, 100, 100);
+$pdf->SetLineWidth(0.5);
+$pdf->Line(15, 35, 195, 35);
+$pdf->Ln(15); // Espacio después del membrete
+
+// --- CONTENIDO PRINCIPAL ---
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Lista de Pagos'), 0, 1, 'C');
+$pdf->Ln(8);
+
+// Encabezados de la tabla
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetFillColor(200, 220, 255);
 $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
@@ -24,7 +49,7 @@ $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 
 $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
 $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
 
-// Cuerpo
+// Cuerpo de la tabla
 $pdf->SetFont('Arial', '', 9);
 foreach ($pagos as $pago) {
     $id = substr($pago['id'], 0, 6) . '...';
@@ -42,5 +67,10 @@ foreach ($pagos as $pago) {
     $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $usuario), 1, 1);
 }
 
+// Pie de página (opcional)
+$pdf->SetY(-15);
+$pdf->SetFont('Arial', 'I', 8);
+$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Página ' . $pdf->PageNo()), 0, 0, 'C');
+
 // Salida
-$pdf->Output('pagos.pdf', 'I');
+$pdf->Output('reporte_pagos.pdf', 'I');

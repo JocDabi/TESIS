@@ -4,108 +4,189 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generar Lista de Pagos (PDF)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="./img/Recurso 1.png">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
+        * {
+            font-family: "Montserrat", sans-serif;
         }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
+        .dropdown:hover .dropdown-menu {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
         }
-        input[type="date"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+            min-width: 160px;
+            z-index: 10;
         }
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
+        .dropdown-menu a {
+            padding: 0.5rem 1rem;
+            display: block;
+            color: #4a5568;
+            transition: background-color 0.2s, color 0.2s;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .alert {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            border-radius: 4px;
-            display: none; /* Oculto por defecto */
+        .dropdown-menu a:hover {
+            background-color: #f7fafc;
+            color: #1a202c;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Generar Lista de Pagos (PDF)</h1>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex w-full">
+                    <div class="hidden md:ml-6 md:flex space-x-8">
+                        <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                            <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
+                        </a>
 
-        <form id="reportForm" action="../../php/generar_pdf_pagos.php" method="GET" target="_blank">
-            <div class="form-group">
-                <label for="fecha_inicio">Fecha de Inicio:</label>
-                <input type="date" id="fecha_inicio" name="fecha_inicio">
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Transacciones
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
+                                <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+                            </div>
+                        </div>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Reportes y gráficos
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
+                                <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                            </div>
+                        </div>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Ayuda
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center">
+                    <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                        <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
+                    </button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="fecha_fin">Fecha Fin:</label>
-                <input type="date" id="fecha_fin" name="fecha_fin">
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 flex-grow">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white rounded-lg shadow-md p-8 max-w-2xl mx-auto">
+                <h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Generar Lista de Pagos (PDF)</h1>
+
+                <form id="reportForm" action="../../php/generar_pdf_pagos.php" method="GET" target="_blank" class="space-y-4">
+                    <div class="form-group">
+                        <label for="fecha_inicio" class="block text-sm font-medium text-gray-700 mb-1">Fecha de Inicio:</label>
+                        <input type="date" id="fecha_inicio" name="fecha_inicio" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_fin" class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin:</label>
+                        <input type="date" id="fecha_fin" name="fecha_fin" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado" class="block text-sm font-medium text-gray-700 mb-1">Filtrar por Estado:</label>
+                        <select id="estado" name="estado" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Todos</option>
+                            <option value="ready_to_be_checked">Listo para revisar</option>
+                            <option value="completed">Completado</option>
+                            <option value="in_process">En proceso</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Generar PDF de Pagos
+                    </button>
+                    <div id="alertMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"></div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="estado">Filtrar por Estado:</label>
-                <select id="estado" name="estado">
-                    <option value="">Todos</option>
-                    <option value="ready_to_be_checked">Listo para revisar</option>
-                    <option value="completed">Completado</option>
-                    <option value="in_process">En proceso</option>
-                    </select>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+        <p>&copy; 2025 DCM Development. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Modal de cierre de sesión -->
+    <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
+        <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
+                        Sí, cerrar sesión
+                    </button>
+                    <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
             </div>
-            <button type="submit">Generar PDF de Pagos</button>
-            <div id="alertMessage" class="alert"></div>
-        </form>
+        </div>
     </div>
+
     <script>
+        // Lógica para el modal de cerrar sesión
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogoutButton = document.getElementById('confirmLogout');
+        const cancelLogoutButton = document.getElementById('cancelLogout');
+
+        logoutButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            logoutModal.classList.remove('hidden');
+        });
+
+        cancelLogoutButton.addEventListener('click', function() {
+            logoutModal.classList.add('hidden');
+        });
+
+        logoutModal.addEventListener('click', function(event) {
+            if (event.target === logoutModal) {
+                logoutModal.classList.add('hidden');
+            }
+        });
+
+        confirmLogoutButton.addEventListener('click', function() {
+            console.log("Cerrando sesión...");
+            window.location.href = '../index.php';
+            logoutModal.classList.add('hidden');
+        });
+
+        // Validación del formulario
         document.getElementById('reportForm').addEventListener('submit', function(event) {
             const fechaInicio = document.getElementById('fecha_inicio').value;
             const fechaFin = document.getElementById('fecha_fin').value;
             const alertDiv = document.getElementById('alertMessage');
 
-            // Simple validación de fechas (opcional pero recomendado)
             if (fechaInicio && fechaFin && new Date(fechaInicio) > new Date(fechaFin)) {
-                event.preventDefault(); // Evita que el formulario se envíe
+                event.preventDefault();
                 alertDiv.textContent = 'La Fecha de Inicio no puede ser posterior a la Fecha Fin.';
-                alertDiv.style.display = 'block';
+                alertDiv.classList.remove('hidden');
+                alertDiv.classList.add('block');
             } else {
-                alertDiv.style.display = 'none';
+                alertDiv.classList.add('hidden');
+                alertDiv.classList.remove('block');
             }
         });
-
     </script>
 </body>
 </html>

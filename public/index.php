@@ -93,7 +93,7 @@
 
                 const formData = new FormData(loginForm);
 
-                fetch('/tesis_final/php/login.php', {
+                fetch('../php/login.php', {
                     method: 'POST',
                     body: formData
                 })

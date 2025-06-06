@@ -1,122 +1,37 @@
 <?php
 header('Content-Type: application/json');
 
-// --- SIMULACIÓN DE DATOS JSON (ACTUALIZADO CON EL FORMATO ORIGINAL PROPORCIONADO) ---
-$json_ejemplo = '[
-    {
-        "id": "406b106d-07ff-4613-bf11-19f959ebdb37",
-        "createdAt": "2025-02-11T02:48:31.382Z",
-        "updatedAt": null,
-        "deletedAt": null,
-        "amount": "50",
-        "description": "Pago curso ccna5",
-        "paymentMethod": "zelle",
-        "status": "ready_to_be_checked",
-        "course": { },
-        "user": {
-            "id": "933260d8-bfb3-4f7b-819f-59c3f3e4fe61",
-            "createdAt": "2025-02-10T05:20:39.467Z",
-            "updatedAt": null,
-            "deletedAt": null,
-            "email": "testtt@gmail.com",
-            "identificationNumber": "12344536478941405",
-            "firstName": "John",
-            "lastName": "Doe",
-            "role": "user"
-        },
-        "validatedBy": { }
-    },
-    {
-        "id": "bd7c20b5-12c0-4f0e-8d4f-5f55b89dafd0",
-        "createdAt": "2025-05-28T02:49:44.982Z",
-        "updatedAt": null,
-        "deletedAt": null,
-        "amount": "100",
-        "description": "Pago curso inglés",
-        "paymentMethod": "paypal",
-        "status": "completed",
-        "course": { },
-        "user": {
-            "id": "933260d8-bfb3-4f7b-819f-59c3f3e4fe61",
-            "createdAt": "2025-02-10T05:20:39.467Z",
-            "updatedAt": null,
-            "deletedAt": null,
-            "email": "testtt@gmail.com",
-            "identificationNumber": "12344536478941405",
-            "firstName": "John",
-            "lastName": "Loe",
-            "role": "user"
-        },
-        "validatedBy": { }
-    },
-    {
-        "id": "abc123d4-56ef-7890-abcd-1234567890ef",
-        "createdAt": "2025-05-29T10:00:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "75.00",
-        "description": "Pago material didactico", "paymentMethod": "transferencia",
-        "status": "in_process",
-        "course": { },
-        "user": { "id": "user-abc", "firstName": "Jane", "lastName": "Smith", "email": "jane@example.com" },
-        "validatedBy": null
-    },
-    {
-        "id": "def456g7-89ab-cdef-0123-4567890abcde",
-        "createdAt": "2025-05-25T14:30:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "200.00",
-        "description": "Pago mensualidad", "paymentMethod": "tarjeta",
-        "status": "in_process",
-        "course": { },
-        "user": { "id": "user-def", "firstName": "Peter", "lastName": "Jones", "email": "peter@example.com" },
-        "validatedBy": null
-    },
-    {
-        "id": "e0c8b7a6-d5c4-e3f2-a1b0-c9d8e7f6a5b4",
-        "createdAt": "2025-05-15T09:00:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "150.00",
-        "description": "Cuota de membresía", "paymentMethod": "transferencia",
-        "status": "ready_to_be_checked",
-        "course": { },
-        "user": { "id": "user-ghi", "firstName": "Alice", "lastName": "Wonder", "email": "alice@example.com" },
-        "validatedBy": null
-    },
-    {
-        "id": "f1d9c8b7-e6a5-d4c3-b2a1-c0d9e8f7a6b5",
-        "createdAt": "2025-05-27T11:00:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "30.00",
-        "description": "Libro de texto", "paymentMethod": "zelle",
-        "status": "completed",
-        "course": { },
-        "user": { "id": "user-jkl", "firstName": "Bob", "lastName": "Builder", "email": "bob@example.com" },
-        "validatedBy": { }
-    },
-    {
-        "id": "new-payment-1-future",
-        "createdAt": "2025-05-30T09:00:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "120.00",
-        "description": "Pago curso diseño", "paymentMethod": "transferencia",
-        "status": "in_process",
-        "course": { },
-        "user": { "id": "user-future1", "firstName": "Charlie", "lastName": "Brown", "email": "charlie@example.com" },
-        "validatedBy": null
-    },
-    {
-        "id": "new-payment-2-future",
-        "createdAt": "2025-06-01T14:00:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "80.00",
-        "description": "Pago software", "paymentMethod": "paypal",
-        "status": "ready_to_be_checked",
-        "course": { },
-        "user": { "id": "user-future2", "firstName": "Diana", "lastName": "Prince", "email": "diana@example.com" },
-        "validatedBy": null
-    }
-]';
-// --- FIN SIMULACIÓN DE DATOS ---
+// URL del endpoint de la API
+$api_url = 'https://payment-gateway-backend-production.up.railway.app/transaction/transaction-json';
+
+// Obtener datos de la API
+$json_response = @file_get_contents($api_url);
+
+if ($json_response === FALSE) {
+    // Si hay error al conectar con la API, devolver error
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'No se pudo conectar con el servidor de pagos',
+        'details' => error_get_last()['message'] ?? 'Error desconocido'
+    ]);
+    exit();
+}
+
+// Decodificar el JSON de la API
+$all_pagos = json_decode($json_response, true);
+
+if ($all_pagos === NULL) {
+    // Si hay error al decodificar el JSON
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Los datos recibidos no son válidos',
+        'details' => json_last_error_msg()
+    ]);
+    exit();
+}
 
 // Establecer la zona horaria predeterminada
 date_default_timezone_set('UTC'); // Usa UTC para consistencia con los datos JSON
-
-// Decodificar el JSON de ejemplo a un array de PHP
-$all_pagos = json_decode($json_ejemplo, true);
 
 // --- Manejo de la Fecha de Corte desde el Frontend ---
 $fecha_corte_str_frontend = $_GET['fecha_corte'] ?? ''; // Formato esperado: dd/mm/aaaa
@@ -199,11 +114,11 @@ $response_data_for_frontend = [];
 foreach ($pagos_fuera_de_fecha as $pago) {
     $response_data_for_frontend[] = [
         'id' => $pago['id'],
-        'fechaRealizado' => $pago['fechaRealizadoFormateada'], // 'YYYY-MM-DD'
+        'fechaRealizado' => $pago['fechaRealizadoFormateada'] ?? 'N/A', // 'YYYY-MM-DD'
         'fechaCorte' => $fecha_corte_display,                 // La fecha de corte del filtro para todos los resultados
         'cliente' => ($pago['user']['firstName'] ?? '') . ' ' . ($pago['user']['lastName'] ?? ''),
         'monto' => '$' . number_format((float)$pago['amount'], 2, '.', ','),
-        'estado' => str_replace('_', ' ', $pago['status']), // 'in_process' -> 'in process'
+        'estado' => isset($pago['status']) ? str_replace('_', ' ', $pago['status']) : 'N/A', // 'in_process' -> 'in process'
         'acciones' => 'Ver Detalle', // Mantener esto fijo o según tu lógica
         // Incluir los datos originales del pago en el array para el modal
         'description' => $pago['description'] ?? 'Sin descripción',

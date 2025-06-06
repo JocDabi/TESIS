@@ -4,102 +4,34 @@ header('Content-Type: application/json');
 // Establecer la zona horaria predeterminada
 date_default_timezone_set('UTC'); // Usa UTC para consistencia con los datos JSON
 
-// --- SIMULACIÓN DE DATOS JSON ---
-// He añadido más variedad de estados y fechas para que los gráficos sean más interesantes.
-$json_ejemplo = '[
-    {
-        "id": "406b106d-07ff-4613-bf11-19f959ebdb37",
-        "createdAt": "2025-02-11T02:48:31.382Z",
-        "amount": "50",
-        "description": "Pago curso ccna5",
-        "paymentMethod": "zelle",
-        "status": "ready_to_be_checked",
-        "user": { "firstName": "John", "lastName": "Doe" }
-    },
-    {
-        "id": "bd7c20b5-12c0-4f0e-8d4f-5f55b89dafd0",
-        "createdAt": "2025-05-20T02:49:44.982Z",
-        "amount": "100",
-        "description": "Pago curso inglés",
-        "paymentMethod": "paypal",
-        "status": "completed",
-        "user": { "firstName": "Jane", "lastName": "Smith" }
-    },
-    {
-        "id": "abc123d4-56ef-7890-abcd-1234567890ef",
-        "createdAt": "2025-05-25T10:00:00.000Z",
-        "amount": "75.00",
-        "description": "Pago material didactico",
-        "paymentMethod": "transferencia",
-        "status": "in_process",
-        "user": { "firstName": "Peter", "lastName": "Jones" }
-    },
-    {
-        "id": "def456g7-89ab-cdef-0123-4567890abcde",
-        "createdAt": "2025-05-28T14:30:00.000Z",
-        "amount": "200.00",
-        "description": "Pago mensualidad",
-        "paymentMethod": "tarjeta",
-        "status": "completed",
-        "user": { "firstName": "Alice", "lastName": "Wonder" }
-    },
-    {
-        "id": "e0c8b7a6-d5c4-e3f2-a1b0-c9d8e7f6a5b4",
-        "createdAt": "2025-05-18T09:00:00.000Z",
-        "amount": "150.00",
-        "description": "Cuota de membresía",
-        "paymentMethod": "transferencia",
-        "status": "ready_to_be_checked",
-        "user": { "firstName": "Bob", "lastName": "Builder" }
-    },
-    {
-        "id": "f1d9c8b7-e6a5-d4c3-b2a1-c0d9e8f7a6b5",
-        "createdAt": "2025-05-29T11:00:00.000Z",
-        "amount": "30.00",
-        "description": "Libro de texto",
-        "paymentMethod": "zelle",
-        "status": "rejected",
-        "user": { "firstName": "Charlie", "lastName": "Brown" }
-    },
-    {
-        "id": "g2e0f1d9-h8g7-i6j5-k4l3-m2n1o0p9q8r7",
-        "createdAt": "2025-05-29T15:00:00.000Z",
-        "amount": "60.00",
-        "description": "Renovación",
-        "paymentMethod": "paypal",
-        "status": "completed",
-        "user": { "firstName": "Diana", "lastName": "Prince" }
-    },
-    {
-        "id": "h3i1j0k2-l9m8-n7o6-p5q4-r3s2t1u0v9w8",
-        "createdAt": "2025-05-22T08:00:00.000Z",
-        "amount": "90.00",
-        "description": "Suscripción",
-        "paymentMethod": "tarjeta",
-        "status": "in_process",
-        "user": { "firstName": "Eve", "lastName": "Adams" }
-    },
-    {
-        "id": "i4j2k1l3-m0n9-o8p7-q6r5-s4t3u2v1w0x9",
-        "createdAt": "2025-06-01T10:00:00.000Z",
-        "amount": "110.00",
-        "description": "Pago anticipado",
-        "paymentMethod": "zelle",
-        "status": "ready_to_be_checked",
-        "user": { "firstName": "Frank", "lastName": "White" }
-    },
-    {
-        "id": "j5k3l2m4-n1o0-p9q8-r7s6-t5u4v3w2x1y0",
-        "createdAt": "2025-06-05T16:00:00.000Z",
-        "amount": "45.00",
-        "description": "Cargo adicional",
-        "paymentMethod": "transferencia",
-        "status": "rejected",
-        "user": { "firstName": "Grace", "lastName": "Black" }
-    }
-]';
+// URL del endpoint de la API
+$api_url = 'https://payment-gateway-backend-production.up.railway.app/transaction/transaction-json';
 
-$all_pagos = json_decode($json_ejemplo, true);
+// Obtener datos de la API
+$json_response = @file_get_contents($api_url);
+
+if ($json_response === FALSE) {
+    // Si hay error al conectar con la API, devolver error
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'No se pudo conectar con el servidor de pagos',
+        'details' => error_get_last()['message'] ?? 'Error desconocido'
+    ]);
+    exit();
+}
+
+// Decodificar el JSON de la API
+$all_pagos = json_decode($json_response, true);
+
+if ($all_pagos === NULL) {
+    // Si hay error al decodificar el JSON
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Los datos recibidos no son válidos',
+        'details' => json_last_error_msg()
+    ]);
+    exit();
+}
 
 // --- Obtener y parsear fechas de filtro ---
 $start_date_str = $_GET['fecha_inicio'] ?? null; // Formato esperado: dd/mm/aaaa

@@ -1,81 +1,34 @@
 <?php
 header('Content-Type: application/json');
 
-// === SIMULACIÓN DE DATOS CON JSON DE EJEMPLO ===
-// En un futuro, aquí iría el código para hacer una petición HTTP al enlace de tu amigo
-$json_ejemplo = '[
-    {
-        "id": "406b106d-07ff-4613-bf11-19f959ebdb37",
-        "createdAt": "2025-02-11T02:48:31.382Z",
-        "updatedAt": null,
-        "deletedAt": null,
-        "amount": "50",
-        "description": "Pago curso ccna5",
-        "paymentMethod": "zelle",
-        "status": "ready_to_be_checked",
-        "course": { },
-        "user": {
-            "id": "933260d8-bfb3-4f7b-819f-59c3f3e4fe61",
-            "createdAt": "2025-02-10T05:20:39.467Z",
-            "updatedAt": null,
-            "deletedAt": null,
-            "email": "testtt@gmail.com",
-            "identificationNumber": "12344536478941405",
-            "firstName": "John",
-            "lastName": "Doe",
-            "role": "user"
-        },
-        "validatedBy": { }
-    },
-    {
-        "id": "bd7c20b5-12c0-4f0e-8d4f-5f55b89dafd0",
-        "createdAt": "2025-02-11T02:49:44.982Z",
-        "updatedAt": null,
-        "deletedAt": null,
-        "amount": "100",
-        "description": "Pago curso inglés",
-        "paymentMethod": "paypal",
-        "status": "completed",
-         "course": { },
-        "user": {
-            "id": "933260d8-bfb3-4f7b-819f-59c3f3e4fe61",
-            "createdAt": "2025-02-10T05:20:39.467Z",
-            "updatedAt": null,
-            "deletedAt": null,
-            "email": "testtt@gmail.com",
-            "identificationNumber": "12344536478941405",
-            "firstName": "John",
-            "lastName": "Doe",
-            "role": "user"
-        },
-        "validatedBy": { }
-    },
-    {
-        "id": "abc123d4-56ef-7890-abcd-1234567890ef",
-        "createdAt": "2025-02-10T10:00:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "75.00",
-        "description": "Pago material didactico", "paymentMethod": "transferencia",
-        "status": "completed",
-         "course": { },
-        "user": { "id": "user-abc", "firstName": "Jane", "lastName": "Smith", "email": "jane@example.com" },
-        "validatedBy": null
-    },
-     {
-        "id": "def456g7-89ab-cdef-0123-4567890abcde",
-        "createdAt": "2025-02-09T14:30:00.000Z",
-        "updatedAt": null, "deletedAt": null, "amount": "200.00",
-        "description": "Pago mensualidad", "paymentMethod": "tarjeta",
-        "status": "in_process",
-         "course": { },
-        "user": { "id": "user-def", "firstName": "Peter", "lastName": "Jones", "email": "peter@example.com" },
-        "validatedBy": null
-    }
-]';
-// === FIN SIMULACIÓN DE DATOS ===
+// URL del endpoint de la API
+$api_url = 'https://payment-gateway-backend-production.up.railway.app/transaction/transaction-json';
 
+// Obtener datos de la API
+$json_response = @file_get_contents($api_url);
 
-// Decodificar el JSON de ejemplo a un array de PHP
-$all_pagos = json_decode($json_ejemplo, true); // true para decodificar como array asociativo
+if ($json_response === FALSE) {
+    // Si hay error al conectar con la API, devolver error
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'No se pudo conectar con el servidor de pagos',
+        'details' => error_get_last()['message'] ?? 'Error desconocido'
+    ]);
+    exit();
+}
+
+// Decodificar el JSON de la API
+$all_pagos = json_decode($json_response, true);
+
+if ($all_pagos === NULL) {
+    // Si hay error al decodificar el JSON
+    http_response_code(500);
+    echo json_encode([
+        'error' => 'Los datos recibidos no son válidos',
+        'details' => json_last_error_msg()
+    ]);
+    exit();
+}
 
 // --- Lógica para Recibir y Aplicar Filtros ---
 $filtered_pagos = $all_pagos; // Empezamos con todos los pagos
@@ -93,32 +46,38 @@ if (!empty($filtro_status)) {
     $filtered_pagos = array_values($filtered_pagos); // Re-indexar el array después de filtrar
 }
 
-// Aplicar filtro por rango de fechas (simplificado: compara solo la parte de la fecha)
+// Aplicar filtro por rango de fechas
 if (!empty($filtro_fecha_inicio) || !empty($filtro_fecha_fin)) {
     $filtered_pagos = array_filter($filtered_pagos, function($pago) use ($filtro_fecha_inicio, $filtro_fecha_fin) {
         if (!isset($pago['createdAt'])) {
             return false; // No incluir pagos sin fecha
         }
-        $fecha_pago_str = explode('T', $pago['createdAt'])[0]; // Obtener solo la parte de la fecha (YYYY-MM-DD)
+        
+        try {
+            $fecha_pago = new DateTime($pago['createdAt']);
+            $fecha_pago_str = $fecha_pago->format('Y-m-d'); // Formato YYYY-MM-DD
+            
+            // Convertir fechas de filtro a DateTime para mejor comparación
+            $fecha_inicio_dt = !empty($filtro_fecha_inicio) ? new DateTime($filtro_fecha_inicio) : null;
+            $fecha_fin_dt = !empty($filtro_fecha_fin) ? new DateTime($filtro_fecha_fin) : null;
+            
+            $match_fecha_inicio = empty($filtro_fecha_inicio) || ($fecha_pago >= $fecha_inicio_dt);
+            $match_fecha_fin = empty($filtro_fecha_fin) || ($fecha_pago <= $fecha_fin_dt);
 
-        $match_fecha_inicio = empty($filtro_fecha_inicio) || ($fecha_pago_str >= $filtro_fecha_inicio);
-        $match_fecha_fin = empty($filtro_fecha_fin) || ($fecha_pago_str <= $filtro_fecha_fin);
-
-        return $match_fecha_inicio && $match_fecha_fin;
+            return $match_fecha_inicio && $match_fecha_fin;
+        } catch (Exception $e) {
+            error_log("Error procesando fecha para pago ID " . ($pago['id'] ?? 'N/A') . ": " . $e->getMessage());
+            return false;
+        }
     });
     $filtered_pagos = array_values($filtered_pagos); // Re-indexar el array después de filtrar
 }
 
-// --- Simulación de Paginación (Muy Básica) ---
-$pagos_a_enviar = $filtered_pagos;
-
-
 // --- Preparar Respuesta ---
 $response_data = [
-    'data' => $pagos_a_enviar,
+    'data' => $filtered_pagos,
     'total' => count($filtered_pagos)
 ];
-
 
 // Codificar el array de respuesta a JSON para enviar al frontend
 echo json_encode($response_data);

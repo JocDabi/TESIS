@@ -1,14 +1,41 @@
 <?php
 require('fpdf/fpdf.php');
 
-// Suponiendo que este JSON venga de una fuente externa:
-$json = '[{"id":"406b106d-07ff-4613-bf11-19f959ebdb37","createdAt":"2025-02-11T02:48:31.382Z","updatedAt":null,"deletedAt":null,"amount":"50","description":"Pago curso ccna5","paymentMethod":"zelle","status":"ready_to_be_checked","course":{},"user":{"id":"933260d8-bfb3-4f7b-819f-59c3f3e4fe61","createdAt":"2025-02-10T05:20:39.467Z","updatedAt":null,"deletedAt":null,"email":"testtt@gmail.com","identificationNumber":"12344536478941405","firstName":"John","lastName":"Doe","role":"user"},"validatedBy":{}},{"id":"bd7c20b5-12c0-4f0e-8d4f-5f55b89dafd0","createdAt":"2025-02-11T02:49:44.982Z","updatedAt":null,"deletedAt":null,"amount":"100","description":"Pago curso inglés","paymentMethod":"paypal","status":"completed","course":{},"user":{"id":"933260d8-bfb3-4f7b-819f-59c3f3e4fe61","createdAt":"2025-02-10T05:20:39.467Z","updatedAt":null,"deletedAt":null,"email":"testtt@gmail.com","identificationNumber":"12344536478941405","firstName":"John","lastName":"Doe","role":"user"},"validatedBy":{}},{"id":"abc123d4-56ef-7890-abcd-1234567890ef","createdAt":"2025-02-10T10:00:00.000Z","updatedAt":null,"deletedAt":null,"amount":"75.00","description":"Pago material didactico","paymentMethod":"transferencia","status":"completed","course":{},"user":{"id":"user-abc","firstName":"Jane","lastName":"Smith","email":"jane@example.com"},"validatedBy":null},{"id":"def456g7-89ab-cdef-0123-4567890abcde","createdAt":"2025-02-09T14:30:00.000Z","updatedAt":null,"deletedAt":null,"amount":"200.00","description":"Pago mensualidad","paymentMethod":"tarjeta","status":"in_process","course":{},"user":{"id":"user-def","firstName":"Peter","lastName":"Jones","email":"peter@example.com"},"validatedBy":null}]';
+// URL del endpoint remoto
+$url = 'https://payment-gateway-backend-production.up.railway.app/transaction/transaction-json';
+
+// Obtener JSON desde el endpoint
+$json = file_get_contents($url);
+
+// Verificar que la respuesta sea válida
+if ($json === FALSE) {
+    die("No se pudo obtener el JSON del endpoint.");
+}
 
 // Decodificar JSON a array
 $pagos = json_decode($json, true);
 
+// Verificar si el JSON fue correctamente decodificado
+if ($pagos === NULL) {
+    die("Error al decodificar el JSON.");
+}
+
+// Crear PDF con clase extendida para el pie de página
+class PDF extends FPDF {
+    // Pie de página
+    function Footer() {
+        // Posición a 1.5 cm del final
+        $this->SetY(-15);
+        // Arial itálica 8
+        $this->SetFont('Arial', 'I', 8);
+        // Número de página
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Página ' . $this->PageNo() . '/{nb}'), 0, 0, 'C');
+    }
+}
+
 // Crear PDF
-$pdf = new FPDF();
+$pdf = new PDF();
+$pdf->AliasNbPages(); // Para mostrar el total de páginas (ej. "1/3")
 $pdf->AddPage();
 
 // Configurar márgenes
@@ -16,7 +43,7 @@ $pdf->SetMargins(15, 25, 15);
 
 // --- MEMBRETE ---
 // Logo (reemplaza 'logo.png' con la ruta correcta a tu imagen)
-$pdf->Image('../public/img/logo.png', 15, 10, 30); // Ajusta las coordenadas y tamaño según necesites
+$pdf->Image('../public/img/logo.png', 15, 8, 60); // Aumenta el ancho a 45, ajusta Y a 8 para mejor alineación
 
 // Título del reporte
 $pdf->SetY(15); // Posición vertical después del logo
@@ -52,6 +79,21 @@ $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', 
 // Cuerpo de la tabla
 $pdf->SetFont('Arial', '', 9);
 foreach ($pagos as $pago) {
+    // Verificar si necesita nueva página
+    if ($pdf->GetY() > 250) { // Si está cerca del final de la página
+        $pdf->AddPage();
+        // Volver a dibujar los encabezados de la tabla en la nueva página
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetFillColor(200, 220, 255);
+        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
+        $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);
+        $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Monto'), 1, 0, 'C', true);
+        $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);
+        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
+        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
+        $pdf->SetFont('Arial', '', 9);
+    }
+    
     $id = substr($pago['id'], 0, 6) . '...';
     $fecha = substr($pago['createdAt'], 0, 10);
     $monto = '$' . number_format((float)$pago['amount'], 2, ',', '.');
@@ -66,11 +108,6 @@ foreach ($pagos as $pago) {
     $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $estado), 1);
     $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $usuario), 1, 1);
 }
-
-// Pie de página (opcional)
-$pdf->SetY(-15);
-$pdf->SetFont('Arial', 'I', 8);
-$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Página ' . $pdf->PageNo()), 0, 0, 'C');
 
 // Salida
 $pdf->Output('reporte_pagos.pdf', 'I');

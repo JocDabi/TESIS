@@ -168,7 +168,6 @@
                     case 'ready_to_be_checked': return { background: 'rgba(251, 191, 36, 0.8)', border: 'rgba(251, 191, 36, 1)' }; // Yellow
                     case 'completed': return { background: 'rgba(52, 211, 153, 0.8)', border: 'rgba(52, 211, 153, 1)' };     // Green
                     case 'rejected': return { background: 'rgba(239, 68, 68, 0.8)', border: 'rgba(239, 68, 68, 1)' };         // Red
-                    case 'in_process': return { background: 'rgba(96, 165, 250, 0.8)', border: 'rgba(96, 165, 250, 1)' };       // Blue
                     default: return { background: 'rgba(156, 163, 175, 0.8)', border: 'rgba(156, 163, 175, 1)' }; // Gray
                 }
             }
@@ -179,7 +178,6 @@
                     case 'ready_to_be_checked': return 'Lista para verificar';
                     case 'completed': return 'Completado';
                     case 'rejected': return 'Rechazado';
-                    case 'in_process': return 'En proceso';
                     default: return 'Desconocido';
                 }
             }
@@ -290,6 +288,13 @@
                     fecha_inicio: filtroFechaInicio.value,
                     fecha_fin: filtroFechaFin.value
                 };
+
+                // Validación: la fecha de inicio no puede ser mayor a la fecha fin
+                if (filters.fecha_inicio && filters.fecha_fin && filters.fecha_inicio > filters.fecha_fin) {
+                    alert('La fecha de inicio no puede ser mayor que la fecha fin.');
+                    return;
+                }
+
                 fetchAndRenderCharts(filters);
             });
 

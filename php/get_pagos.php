@@ -73,10 +73,20 @@ if (!empty($filtro_fecha_inicio) || !empty($filtro_fecha_fin)) {
     $filtered_pagos = array_values($filtered_pagos); // Re-indexar el array después de filtrar
 }
 
+// Recibir parámetros de paginación
+$pagina = isset($_GET['pagina']) ? max(1, intval($_GET['pagina'])) : 1;
+$limite = isset($_GET['limite']) ? max(1, intval($_GET['limite'])) : 25;
+
+$total_pagos = count($filtered_pagos);
+
+// --- Paginación ---
+$offset = ($pagina - 1) * $limite;
+$pagos_paginados = array_slice($filtered_pagos, $offset, $limite);
+
 // --- Preparar Respuesta ---
 $response_data = [
-    'data' => $filtered_pagos,
-    'total' => count($filtered_pagos)
+    'data' => $pagos_paginados,
+    'total' => $total_pagos
 ];
 
 // Codificar el array de respuesta a JSON para enviar al frontend

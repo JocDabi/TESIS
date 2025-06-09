@@ -20,6 +20,31 @@ if ($pagos === NULL) {
     die("Error al decodificar el JSON.");
 }
 
+// Recibir filtros desde GET
+$filtro_fecha_inicio = $_GET['fecha_inicio'] ?? '';
+$filtro_fecha_fin = $_GET['fecha_fin'] ?? '';
+$filtro_estado = $_GET['estado'] ?? '';
+
+// Filtrar por estado
+if (!empty($filtro_estado)) {
+    $pagos = array_filter($pagos, function($pago) use ($filtro_estado) {
+        return isset($pago['status']) && $pago['status'] === $filtro_estado;
+    });
+    $pagos = array_values($pagos);
+}
+
+// Filtrar por fechas
+if (!empty($filtro_fecha_inicio) || !empty($filtro_fecha_fin)) {
+    $pagos = array_filter($pagos, function($pago) use ($filtro_fecha_inicio, $filtro_fecha_fin) {
+        if (!isset($pago['createdAt'])) return false;
+        $fecha_pago = substr($pago['createdAt'], 0, 10);
+        $match_inicio = empty($filtro_fecha_inicio) || ($fecha_pago >= $filtro_fecha_inicio);
+        $match_fin = empty($filtro_fecha_fin) || ($fecha_pago <= $filtro_fecha_fin);
+        return $match_inicio && $match_fin;
+    });
+    $pagos = array_values($pagos);
+}
+
 // Crear PDF con clase extendida para el pie de página
 class PDF extends FPDF {
     // Pie de página
@@ -55,11 +80,25 @@ $pdf->SetFont('Arial', '', 10);
 $fechaGeneracion = date('d/m/Y H:i:s');
 $pdf->Cell(0, 6, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Generado el: ' . $fechaGeneracion), 0, 1, 'C');
 
-// Línea separadora
+// Mostrar rango de fechas filtrado si aplica
+if (!empty($filtro_fecha_inicio) || !empty($filtro_fecha_fin)) {
+    $rango = 'Filtrado por fecha: ';
+    if (!empty($filtro_fecha_inicio) && !empty($filtro_fecha_fin)) {
+        $rango .= date('d/m/Y', strtotime($filtro_fecha_inicio)) . ' al ' . date('d/m/Y', strtotime($filtro_fecha_fin));
+    } elseif (!empty($filtro_fecha_inicio)) {
+        $rango .= 'Desde ' . date('d/m/Y', strtotime($filtro_fecha_inicio));
+    } elseif (!empty($filtro_fecha_fin)) {
+        $rango .= 'Hasta ' . date('d/m/Y', strtotime($filtro_fecha_fin));
+    }
+    $pdf->Cell(0, 6, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $rango), 0, 1, 'C');
+}
+
+// Línea separadora (más separada del membrete)
 $pdf->SetDrawColor(100, 100, 100);
 $pdf->SetLineWidth(0.5);
-$pdf->Line(15, 35, 195, 35);
-$pdf->Ln(15); // Espacio después del membrete
+// Mueve la línea más abajo (por ejemplo, a Y=45)
+$pdf->Line(15, 45, 195, 45);
+$pdf->Ln(25); // Más espacio después del membrete
 
 // --- CONTENIDO PRINCIPAL ---
 $pdf->SetFont('Arial', 'B', 14);
@@ -78,35 +117,40 @@ $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', 
 
 // Cuerpo de la tabla
 $pdf->SetFont('Arial', '', 9);
-foreach ($pagos as $pago) {
-    // Verificar si necesita nueva página
-    if ($pdf->GetY() > 250) { // Si está cerca del final de la página
-        $pdf->AddPage();
-        // Volver a dibujar los encabezados de la tabla en la nueva página
-        $pdf->SetFont('Arial', 'B', 10);
-        $pdf->SetFillColor(200, 220, 255);
-        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
-        $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);
-        $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Monto'), 1, 0, 'C', true);
-        $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);
-        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
-        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
-        $pdf->SetFont('Arial', '', 9);
-    }
-    
-    $id = substr($pago['id'], 0, 6) . '...';
-    $fecha = substr($pago['createdAt'], 0, 10);
-    $monto = '$' . number_format((float)$pago['amount'], 2, ',', '.');
-    $descripcion = strlen($pago['description']) > 30 ? substr($pago['description'], 0, 27) . '...' : $pago['description'];
-    $estado = $pago['status'];
-    $usuario = isset($pago['user']['firstName']) ? $pago['user']['firstName'] . ' ' . $pago['user']['lastName'] : 'N/A';
 
-    $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $id), 1);
-    $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $fecha), 1);
-    $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $monto), 1, 0, 'R');
-    $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $descripcion), 1);
-    $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $estado), 1);
-    $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $usuario), 1, 1);
+if (empty($pagos)) {
+    $pdf->Cell(190, 12, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'No hay pagos encontrados en ese rango.'), 1, 1, 'C');
+} else {
+    foreach ($pagos as $pago) {
+        // Verificar si necesita nueva página
+        if ($pdf->GetY() > 250) {
+            $pdf->AddPage();
+            // Volver a dibujar los encabezados de la tabla en la nueva página
+            $pdf->SetFont('Arial', 'B', 10);
+            $pdf->SetFillColor(200, 220, 255);
+            $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
+            $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);
+            $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Monto'), 1, 0, 'C', true);
+            $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);
+            $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
+            $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
+            $pdf->SetFont('Arial', '', 9);
+        }
+
+        $id = substr($pago['id'], 0, 6) . '...';
+        $fecha = substr($pago['createdAt'], 0, 10);
+        $monto = '$' . number_format((float)$pago['amount'], 2, ',', '.');
+        $descripcion = strlen($pago['description']) > 30 ? substr($pago['description'], 0, 27) . '...' : $pago['description'];
+        $estado = $pago['status'];
+        $usuario = isset($pago['user']['firstName']) ? $pago['user']['firstName'] . ' ' . $pago['user']['lastName'] : 'N/A';
+
+        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $id), 1);
+        $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $fecha), 1);
+        $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $monto), 1, 0, 'R');
+        $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $descripcion), 1);
+        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $estado), 1);
+        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $usuario), 1, 1);
+    }
 }
 
 // Salida

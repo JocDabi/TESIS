@@ -100,7 +100,6 @@ $status_counts = [
     'ready_to_be_checked' => 0,
     'completed' => 0,
     'rejected' => 0,
-    'in_process' => 0,
     // Puedes añadir otros estados si los tienes en tus datos
 ];
 

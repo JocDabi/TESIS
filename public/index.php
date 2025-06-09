@@ -65,7 +65,7 @@
             </div>
 
             <div class="flex items-center justify-end">
-                <a href="/tesis_final/php/recuperar_contrasena.php" class="inline-block align-baseline font-bold text-sm text-indigo-500 hover:text-indigo-800">
+                <a href="../php/recuperar_contrasena.php" class="inline-block align-baseline font-bold text-sm text-indigo-500 hover:text-indigo-800">
                     ¿Olvidaste tu contraseña?
                 </a>
             </div>

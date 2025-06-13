@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntas Frecuentes - Sistema de Pagos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="./img/Recurso 1.png">
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+            min-width: 220px;
+            z-index: 10;
+        }
+        .dropdown-menu a {
+            padding: 0.75rem 1.25rem;
+            display: block;
+            color: #4a5568;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 0.9rem;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f7fafc;
+            color: #1a202c;
+        }
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            background-color: #f7fafc;
+        }
+        .faq-question {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .faq-answer {
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex w-full">
+                    <div class="hidden md:ml-6 md:flex space-x-8">
+                        <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                            <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
+                        </a>
+
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Transacciones
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
+                                <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+                            </div>
+                        </div>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Reportes y gráficos
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
+                                <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                            </div>
+                        </div>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Ayuda
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                                <a href="./preguntas_frecuentes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
+                                <a href="./informacion_sistema.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center">
+                    <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                        <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-4">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Preguntas Frecuentes</h2>
+                    <p class="text-sm text-gray-600 mt-1">Encuentra respuestas a las dudas más comunes sobre el sistema</p>
+                </div>
+
+                <div class="p-6">
+                    <!-- Sección Monitorear Pagos -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Monitorear Pagos</h3>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">1. ¿Cómo puedo filtrar los pagos por fecha?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                En la sección de Monitorear Pagos, puedes usar los campos "Fecha Inicio" y "Fecha Fin" para establecer un rango de fechas. Luego haz clic en el botón "Filtrar" para aplicar los filtros.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">2. ¿Qué significan los diferentes estados de los pagos?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Los estados posibles son:
+                                <ul class="list-disc ml-6 mt-1">
+                                    <li><span class="text-yellow-800 bg-yellow-100 px-1 rounded">Lista para verificar</span>: Pago registrado pero pendiente de confirmación</li>
+                                    <li><span class="text-green-800 bg-green-100 px-1 rounded">Completado</span>: Pago confirmado y procesado</li>
+                                    <li><span class="text-red-800 bg-red-100 px-1 rounded">Rechazado</span>: Pago que no fue aprobado</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">3. ¿Cómo veo los detalles de un pago específico?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Haz clic en el botón "Ver Detalle" que aparece en la columna de Acciones de cada pago. Esto abrirá un modal con toda la información detallada del pago.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Pagos Fuera de Fecha -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Pagos Fuera de Fecha</h3>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">4. ¿Qué se considera un "pago fuera de fecha"?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Un pago fuera de fecha es aquel que fue realizado después de la fecha límite establecida para su procesamiento. El sistema identifica automáticamente estos pagos comparando la fecha de pago con la fecha de corte.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">5. ¿Cómo cambio la fecha de corte para identificar pagos fuera de fecha?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                En la sección de Pagos Fuera de Fecha, puedes seleccionar una nueva "Fecha de Corte" usando el selector de fechas y luego hacer clic en "Filtrar" para actualizar los resultados.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">6. ¿Qué debo hacer cuando identifico un pago fuera de fecha?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Debes revisar el pago en detalle (usando el botón "Ver Detalle") y contactar al cliente para informarle sobre la situación y coordinar las acciones necesarias según las políticas de tu organización.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Generar Reportes -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Generar Reportes</h3>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">7. ¿Cómo genero un reporte de todos los pagos?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                En la sección Generar Lista de Pagos, selecciona el rango de fechas deseado y haz clic en "Generar Reporte". El sistema creará un listado completo de pagos dentro del período seleccionado.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">8. ¿Puedo exportar los reportes a PDF?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Sí, una vez generado el reporte este se exportará a un archivo PDF que puedes descargar o imprimir luego.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">9. ¿Los reportes incluyen información de clientes?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Sí, los reportes detallados incluyen información básica del cliente asociado a cada pago (nombre, identificación y contacto), siempre que estos datos estén disponibles en el sistema.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Gráficos Estadísticos -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Gráficos Estadísticos</h3>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">10. ¿Qué tipos de gráficos estadísticos están disponibles?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                El sistema ofrece Gráficos de dona para distribución por estados de pagos.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">11. ¿Puedo personalizar los períodos para los gráficos?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Sí, puedes seleccionar cualquier rango de fechas usando los selectores "Fecha de Inicio" y "Fecha Fin" antes de generar los gráficos. El sistema ajustará automáticamente las visualizaciones.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">12. ¿Cómo interpreto el gráfico de porcentaje por estados?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                El gráfico circular muestra la proporción de pagos en cada estado (Completado, Rechazado, Pendiente). Cada segmento representa un estado y su tamaño corresponde al porcentaje del total.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección General -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">General</h3>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">13. ¿Los datos se actualizan en tiempo real?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                El sistema se actualiza cada vez que generas un nuevo reporte o gráfico. Para ver la información más reciente, simplemente haz clic en el botón correspondiente para actualizar los datos.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">14. ¿Qué hago si encuentro un error en los datos mostrados?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                Si identificas algún dato incorrecto, por favor contacta al equipo de soporte técnico proporcionando el ID del pago y una descripción del problema encontrado.
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item p-4 rounded-lg">
+                            <div class="faq-question">15. ¿Cómo puedo acceder al manual completo del usuario?</div>
+                            <div class="faq-answer mt-2 ml-4 text-sm">
+                                En el menú de Ayuda encontrarás la opción "Manual de usuario" que contiene la documentación completa del sistema con instrucciones detalladas para todas las funcionalidades.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+        <p>&copy; 2025 Dcm Development. Todos los derechos reservados.</p>
+    </footer>
+
+    <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
+        <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
+                        Sí, cerrar sesión
+                    </button>
+                    <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para el modal de cerrar sesión
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogoutButton = document.getElementById('confirmLogout');
+        const cancelLogoutButton = document.getElementById('cancelLogout');
+
+        // Mostrar el modal cuando se hace clic en "Cerrar sesión"
+        logoutButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+            logoutModal.classList.remove('hidden');
+        });
+
+        // Ocultar el modal cuando se hace clic en "Cancelar"
+        cancelLogoutButton.addEventListener('click', function() {
+            logoutModal.classList.add('hidden');
+        });
+
+        // Ocultar el modal si se hace clic fuera de él (opcional, pero buena UX)
+        logoutModal.addEventListener('click', function(event) {
+            if (event.target === logoutModal) {
+                logoutModal.classList.add('hidden');
+            }
+        });
+
+        // Lógica cuando se confirma el cierre de sesión
+        confirmLogoutButton.addEventListener('click', function() {
+            // Aquí iría la lógica real para cerrar la sesión:
+            // - Limpiar cookies/localStorage (ej. tokens de autenticación)
+            // - Redirigir a la página de inicio de sesión o a la página principal.
+
+            // Por ahora, solo simularemos la redirección
+            console.log("Cerrando sesión...");
+            
+            // Redirige a index.php
+            window.location.href = '../index.php'; // Usa './index.php' si está en la misma carpeta raíz o similar
+
+            // Si necesitas limpiar alguna data antes de la redirección, hazlo aquí.
+            // Por ejemplo, para limpiar un token de autenticación en localStorage:
+            // localStorage.removeItem('authToken'); 
+            
+            // El modal se ocultará automáticamente con la redirección,
+            // pero puedes mantener la línea si lo deseas para casos de prueba o si la redirección no ocurre inmediatamente.
+            logoutModal.classList.add('hidden'); 
+        });
+
+        // Opcional: Animación para las preguntas frecuentes
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                answer.style.display = answer.style.display === 'none' ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>

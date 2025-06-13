@@ -38,57 +38,76 @@
             background-color: #f7fafc;
             color: #1a202c;
         }
+        /* Animación para el spinner de carga */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
-<nav class="bg-white shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex w-full">
-                <div class="hidden md:ml-6 md:flex space-x-8">
-                    <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
-                        <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
-                    </a>
+    <!-- Loader -->
+    <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <p class="text-lg font-semibold">Generando reportes...</p>
+            <div class="mt-4 flex justify-center">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900"></div>
+            </div>
+            <p id="loaderMessage" class="text-sm text-gray-600 mt-2">Por favor espere mientras se procesan los datos</p>
+        </div>
+    </div>
 
-                    <div class="dropdown relative">
-                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
-                            Transacciones
-                        </button>
-                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                            <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
-                            <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex w-full">
+                    <div class="hidden md:ml-6 md:flex space-x-8">
+                        <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                            <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
+                        </a>
+
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Transacciones
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
+                                <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="dropdown relative">
-                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
-                            Reportes y gráficos
-                        </button>
-                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                            <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
-                            <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Reportes y gráficos
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
+                                <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="dropdown relative">
-                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
-                            Ayuda
-                        </button>
-                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Ayuda
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                                <a href="./preguntas_frecuentes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
+                                <a href="./informacion_sistema.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="hidden md:flex items-center">
-                <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
-                    <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
-                </button>
+                <div class="hidden md:flex items-center">
+                    <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                        <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-4">
         <div class="px-4 py-6 sm:px-0">
@@ -121,9 +140,9 @@
                                 <canvas id="statusChart"></canvas>
                             </div>
                             <p id="totalOperationsInfo" class="text-center text-gray-600 text-sm mt-4">Total de operaciones en el período: --</p>
+                            <p id="tiempoConsultaInfo" class="text-center text-gray-500 text-xs mt-2">Tiempo de respuesta: --</p>
                         </div>
-                        </div>
-
+                    </div>
                 </div>
             </div>
         </div>
@@ -134,22 +153,22 @@
     </footer>
 
     <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
-    <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="text-center">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
-            <div class="mt-2 px-7 py-3">
-                <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
-            </div>
-            <div class="items-center px-4 py-3">
-                <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
-                    Sí, cerrar sesión
-                </button>
-                <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                    Cancelar
-                </button>
+        <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
+                        Sí, cerrar sesión
+                    </button>
+                    <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
     </div>
 
     <script>
@@ -159,6 +178,9 @@
             const btnGenerarReporte = document.getElementById('btnGenerarReporte');
             const statusChartCanvas = document.getElementById('statusChart');
             const totalOperationsInfo = document.getElementById('totalOperationsInfo');
+            const tiempoConsultaInfo = document.getElementById('tiempoConsultaInfo');
+            const loader = document.getElementById('loader');
+            const loaderMessage = document.getElementById('loaderMessage');
 
             let statusChart = null; // Variable para almacenar la instancia del gráfico
 
@@ -184,12 +206,16 @@
 
             // Función para generar y mostrar los gráficos
             function fetchAndRenderCharts(filters = {}) {
-                // *** RUTA DEL SCRIPT PHP (AJUSTA SEGÚN TU ESTRUCTURA DE CARPETAS) ***
-                // Si el HTML está en una carpeta y el PHP en una carpeta "hermana" o "padre/hijo":
-                const apiUrlBase = '../../php/get_payment_stats.php'; // Ejemplo: HTML en 'public/HTML/', PHP en 'php/'
-                // Si el HTML y el PHP están en la misma carpeta:
-                // const apiUrlBase = './get_payment_stats.php';
+                // Mostrar loader
+                loader.classList.remove('hidden');
+                loaderMessage.textContent = 'Procesando datos estadísticos...';
+                
+                // Iniciar medición de tiempo
+                const inicioTiempo = performance.now();
 
+                // *** RUTA DEL SCRIPT PHP (AJUSTA SEGÚN TU ESTRUCTURA DE CARPETAS) ***
+                const apiUrlBase = '../../php/get_payment_stats.php';
+                
                 // Convierte las fechas a formato DD/MM/YYYY para el PHP
                 const formattedFilters = {};
                 if (filters.fecha_inicio) {
@@ -210,6 +236,16 @@
                         return response.json();
                     })
                     .then(data => {
+                        // Calcular tiempo de respuesta
+                        const finTiempo = performance.now();
+                        const tiempoConsulta = (finTiempo - inicioTiempo) / 1000; // Convertir a segundos
+                        
+                        // Ocultar loader
+                        loader.classList.add('hidden');
+                        
+                        // Mostrar tiempo de respuesta
+                        tiempoConsultaInfo.textContent = `Tiempo de respuesta: ${tiempoConsulta.toFixed(3)} segundos`;
+
                         console.log('Datos recibidos del PHP:', data); // Para depuración
 
                         const statusCounts = data.status_counts;
@@ -273,7 +309,9 @@
                     })
                     .catch(error => {
                         console.error('Error al obtener los datos de las estadísticas:', error);
+                        loader.classList.add('hidden');
                         totalOperationsInfo.textContent = 'Error al cargar los datos. Inténtelo de nuevo.';
+                        tiempoConsultaInfo.textContent = 'Tiempo de respuesta: --';
                         if (statusChart) {
                             statusChart.destroy();
                             statusChart = null;
@@ -299,7 +337,6 @@
             });
 
             // Cargar los gráficos al cargar la página (con fechas por defecto o sin filtro)
-            // Puedes establecer un rango de fechas por defecto aquí si lo deseas, por ejemplo, el último mes
             const today = new Date();
             const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
@@ -313,49 +350,49 @@
         });
 
         // Lógica para el modal de cerrar sesión
-    const logoutButton = document.getElementById('logout-button');
-    const logoutModal = document.getElementById('logoutModal');
-    const confirmLogoutButton = document.getElementById('confirmLogout');
-    const cancelLogoutButton = document.getElementById('cancelLogout');
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogoutButton = document.getElementById('confirmLogout');
+        const cancelLogoutButton = document.getElementById('cancelLogout');
 
-    // Mostrar el modal cuando se hace clic en "Cerrar sesión"
-    logoutButton.addEventListener('click', function(event) {
-        event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
-        logoutModal.classList.remove('hidden');
-    });
+        // Mostrar el modal cuando se hace clic en "Cerrar sesión"
+        logoutButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+            logoutModal.classList.remove('hidden');
+        });
 
-    // Ocultar el modal cuando se hace clic en "Cancelar"
-    cancelLogoutButton.addEventListener('click', function() {
-        logoutModal.classList.add('hidden');
-    });
-
-    // Ocultar el modal si se hace clic fuera de él (opcional, pero buena UX)
-    logoutModal.addEventListener('click', function(event) {
-        if (event.target === logoutModal) {
+        // Ocultar el modal cuando se hace clic en "Cancelar"
+        cancelLogoutButton.addEventListener('click', function() {
             logoutModal.classList.add('hidden');
-        }
-    });
+        });
 
-    // Lógica cuando se confirma el cierre de sesión
-confirmLogoutButton.addEventListener('click', function() {
-        // Aquí iría la lógica real para cerrar la sesión:
-        // - Limpiar cookies/localStorage (ej. tokens de autenticación)
-        // - Redirigir a la página de inicio de sesión o a la página principal.
+        // Ocultar el modal si se hace clic fuera de él (opcional, pero buena UX)
+        logoutModal.addEventListener('click', function(event) {
+            if (event.target === logoutModal) {
+                logoutModal.classList.add('hidden');
+            }
+        });
 
-        // Por ahora, solo simularemos la redirección
-        console.log("Cerrando sesión...");
-        
-        // Redirige a index.php
-        window.location.href = '../index.php'; // Usa './index.php' si está en la misma carpeta raíz o similar
+        // Lógica cuando se confirma el cierre de sesión
+        confirmLogoutButton.addEventListener('click', function() {
+            // Aquí iría la lógica real para cerrar la sesión:
+            // - Limpiar cookies/localStorage (ej. tokens de autenticación)
+            // - Redirigir a la página de inicio de sesión o a la página principal.
 
-        // Si necesitas limpiar alguna data antes de la redirección, hazlo aquí.
-        // Por ejemplo, para limpiar un token de autenticación en localStorage:
-        // localStorage.removeItem('authToken'); 
-        
-        // El modal se ocultará automáticamente con la redirección,
-        // pero puedes mantener la línea si lo deseas para casos de prueba o si la redirección no ocurre inmediatamente.
-        logoutModal.classList.add('hidden'); 
-    });
+            // Por ahora, solo simularemos la redirección
+            console.log("Cerrando sesión...");
+            
+            // Redirige a index.php
+            window.location.href = '../index.php'; // Usa './index.php' si está en la misma carpeta raíz o similar
+
+            // Si necesitas limpiar alguna data antes de la redirección, hazlo aquí.
+            // Por ejemplo, para limpiar un token de autenticación en localStorage:
+            // localStorage.removeItem('authToken'); 
+            
+            // El modal se ocultará automáticamente con la redirección,
+            // pero puedes mantener la línea si lo deseas para casos de prueba o si la redirección no ocurre inmediatamente.
+            logoutModal.classList.add('hidden'); 
+        });
     </script>
 </body>
 </html>

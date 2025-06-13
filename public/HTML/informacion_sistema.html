@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información del Sistema - Sistema de Pagos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="icon" href="./img/Recurso 1.png">
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            padding: 0.5rem 0;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+            min-width: 220px;
+            z-index: 10;
+        }
+        .dropdown-menu a {
+            padding: 0.75rem 1.25rem;
+            display: block;
+            color: #4a5568;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 0.9rem;
+        }
+        .dropdown-menu a:hover {
+            background-color: #f7fafc;
+            color: #1a202c;
+        }
+        .info-card {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .info-card:hover {
+            background-color: #f7fafc;
+        }
+        .info-title {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        .info-content {
+            color: #4a5568;
+        }
+        .tech-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex w-full">
+                    <div class="hidden md:ml-6 md:flex space-x-8">
+                        <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                            <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
+                        </a>
+
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Transacciones
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
+                                <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+                            </div>
+                        </div>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Reportes y gráficos
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
+                                <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                            </div>
+                        </div>
+                        <div class="dropdown relative">
+                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Ayuda
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                                <a href="./preguntas_frecuentes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
+                                <a href="./informacion_sistema.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center">
+                    <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                        <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 pt-4">
+        <div class="px-4 py-6 sm:px-0">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">Información del Sistema</h2>
+                    <p class="text-sm text-gray-600 mt-1">Detalles técnicos y características de la plataforma</p>
+                </div>
+
+                <div class="p-6">
+                    <!-- Sección General del Sistema -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">General del Sistema</h3>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">1. Nombre del Sistema</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                ePay - Plataforma de Monitoreo y evaluación de Pagos.
+                            </div>
+                        </div>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">2. Versión Actual</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                v1.0 
+                            </div>
+                        </div>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">3. Descripción</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                Plataforma integral para el monitoreo, evaluación y análisis de transacciones de pagos, diseñada para optimizar los procesos financieros y proporcionar reportes detallados.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Arquitectura Técnica -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Arquitectura Técnica</h3>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">4. Tecnologías Principales</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <span class="tech-badge bg-blue-100 text-blue-800">PHP 8.2</span>
+                                <span class="tech-badge bg-green-100 text-green-800">HTML</span>
+                                <span class="tech-badge bg-yellow-100 text-yellow-800">JavaScript</span>
+                                <span class="tech-badge bg-purple-100 text-purple-800">MySQL 8.0</span>
+                                <span class="tech-badge bg-red-100 text-red-800">Chart.js</span>
+                                <span class="tech-badge bg-indigo-100 text-indigo-800">Tailwind CSS</span>
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">5. Infraestructura</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <ul class="list-disc ml-6">
+                                    <li><strong>Servidores:</strong> AWS EC2 (t3.large)</li>
+                                    <li><strong>Almacenamiento:</strong> Amazon S3 + EBS (500GB)</li>
+                                    <li><strong>Base de datos:</strong> Amazon RDS MySQL</li>
+                                    <li><strong>Caché:</strong> ElastiCache Redis</li>
+                                    <li><strong>Balanceador de carga:</strong> ALB</li>
+                                </ul>
+                            </div>
+                        </div> -->
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">5. API Integrada</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <ul class="list-disc ml-6">
+                                    <li>API de Pasarela de Pagos (PayStudy)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Características -->
+                    <div class="mb-8">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Características Principales</h3>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">6. Funcionalidades Clave</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <ul class="list-disc ml-6">
+                                    <li>Monitoreo en tiempo real de transacciones</li>
+                                    <li>Detección de pagos fuera de fecha</li>
+                                    <li>Generación de reportes personalizables</li>
+                                    <li>Visualización de datos mediante gráficos interactivos</li>
+                                    <li>Integración con pasarela de pago</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">7. Seguridad</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <ul class="list-disc ml-6">
+                                    <li>Cifrado para datos sensibles</li>
+                                    <li>Protección contra CSRF y XSS</li>
+                                    <li>Escaneo periódico de vulnerabilidades</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">8. Rendimiento</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <ul class="list-disc ml-6">
+                                    <li>Tiempo de respuesta promedio: < 500ms</li>
+                                    <li>Capacidad: 1000 transacciones/minuto</li>
+                                    <li>Disponibilidad: 99.99% (SLA)</li>
+                                    <li>Escalado automático según demanda</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección Soporte y Mantenimiento -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-800 mb-4 border-b pb-2">Soporte y Mantenimiento</h3>
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">9. Horario de Soporte</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                24/7 mediante:
+                                <ul class="list-disc ml-6 mt-1">
+                                    <li>Email: <a href="mailto:dcmdevelopmente.company@gmail.com" class="text-blue-600 hover:underline">dcmdevelopmente.company@gmail.com</a></li>
+                                    <li>Teléfono: <a href="https://wa.me/584246405985?text=Necesito%20ayuda%20para%20resolver%20un%20problema" target="_blank" class="text-green-600 hover:underline">+58 424-6405985</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">11. Actualizaciones Programadas</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                <ul class="list-disc ml-6">
+                                    <li><strong>Parches de seguridad:</strong> Cada 2 semanas (miércoles 02:00-04:00 UTC)</li>
+                                    <li><strong>Actualizaciones menores:</strong> Mensuales (primer domingo del mes)</li>
+                                    <li><strong>Nuevas funcionalidades:</strong> Trimestrales</li>
+                                </ul>
+                                <p class="mt-2 text-xs text-gray-500">* Ventanas de mantenimiento anunciadas con 72h de anticipación</p>
+                            </div>
+                        </div> -->
+                        
+                        <div class="info-card p-4 rounded-lg">
+                            <div class="info-title">10. Documentación</div>
+                            <div class="info-content mt-2 ml-4 text-sm">
+                                Disponible en:
+                                <ul class="list-disc ml-6 mt-1">
+                                    <li>Manual de usuario integrado</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+        <p>&copy; 2025 Dcm Development. Todos los derechos reservados.</p>
+    </footer>
+
+    <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
+        <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
+                        Sí, cerrar sesión
+                    </button>
+                    <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para el modal de cerrar sesión
+        const logoutButton = document.getElementById('logout-button');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogoutButton = document.getElementById('confirmLogout');
+        const cancelLogoutButton = document.getElementById('cancelLogout');
+
+        // Mostrar el modal cuando se hace clic en "Cerrar sesión"
+        logoutButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+            logoutModal.classList.remove('hidden');
+        });
+
+        // Ocultar el modal cuando se hace clic en "Cancelar"
+        cancelLogoutButton.addEventListener('click', function() {
+            logoutModal.classList.add('hidden');
+        });
+
+        // Ocultar el modal si se hace clic fuera de él (opcional, pero buena UX)
+        logoutModal.addEventListener('click', function(event) {
+            if (event.target === logoutModal) {
+                logoutModal.classList.add('hidden');
+            }
+        });
+
+        // Lógica cuando se confirma el cierre de sesión
+        confirmLogoutButton.addEventListener('click', function() {
+            // Aquí iría la lógica real para cerrar la sesión:
+            // - Limpiar cookies/localStorage (ej. tokens de autenticación)
+            // - Redirigir a la página de inicio de sesión o a la página principal.
+
+            // Por ahora, solo simularemos la redirección
+            console.log("Cerrando sesión...");
+            
+            // Redirige a index.php
+            window.location.href = '../index.php'; // Usa './index.php' si está en la misma carpeta raíz o similar
+
+            // Si necesitas limpiar alguna data antes de la redirección, hazlo aquí.
+            // Por ejemplo, para limpiar un token de autenticación en localStorage:
+            // localStorage.removeItem('authToken'); 
+            
+            // El modal se ocultará automáticamente con la redirección,
+            // pero puedes mantener la línea si lo deseas para casos de prueba o si la redirección no ocurre inmediatamente.
+            logoutModal.classList.add('hidden'); 
+        });
+    </script>
+</body>
+</html>

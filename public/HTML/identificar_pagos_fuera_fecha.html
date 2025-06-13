@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -43,9 +42,27 @@
         .out-of-date {
             background-color: #fee2e2; /* light red/pink */
         }
+        /* Animación para el spinner de carga */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <!-- Loader -->
+    <div id="loader" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <p class="text-lg font-semibold">Cargando datos...</p>
+            <div class="mt-4 flex justify-center">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900"></div>
+            </div>
+        </div>
+    </div>
 
     <nav class="bg-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,9 +96,9 @@
                             Ayuda
                         </button>
                         <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                            <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                            <a href="./preguntas_frecuentes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
+                            <a href="./informacion_sistema.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
                         </div>
                     </div>
                 </div>
@@ -140,7 +157,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                </tbody>
+                            </tbody>
+                            <tfoot id="tiempoConsultaFooter">
+                                <!-- El tiempo de consulta se mostrará aquí -->
+                            </tfoot>
                         </table>
                     </div>
 
@@ -238,6 +258,7 @@
             const filtroFechaCorte = document.getElementById('filtro-fecha-corte'); // Nuevo filtro
             const filtroEstado = document.getElementById('filtro-estado');
             const btnFiltrar = document.getElementById('btnFiltrarPagos');
+            const tiempoConsultaFooter = document.getElementById('tiempoConsultaFooter');
 
             // --- Referencias del Modal ---
             const paymentDetailModal = document.getElementById('paymentDetailModal');
@@ -276,10 +297,17 @@
 
             // Función para cargar y mostrar los pagos
             function fetchAndDisplayPayments(filters = {}) {
+                // Mostrar loader
+                document.getElementById('loader').classList.remove('hidden');
+                
+                // Limpiar tabla
                 pagosTableBody.innerHTML = `<tr><td colspan="7" class="border border-gray-200 px-4 py-2 text-center text-gray-500">Cargando pagos...</td></tr>`;
-                if (paginationInfoDiv) {
-                    paginationInfoDiv.querySelector('.text-gray-700').textContent = 'Cargando...';
-                }
+                
+                // Limpiar tiempo de consulta anterior
+                tiempoConsultaFooter.innerHTML = '';
+                
+                // Iniciar medición de tiempo
+                const inicioTiempo = performance.now();
 
                 // *** RUTA DEL SCRIPT PHP (AJUSTA SEGÚN TU ESTRUCTURA DE CARPETAS) ***
                 // Si el HTML está en una carpeta y el PHP en una carpeta "hermana" o "padre/hijo":
@@ -301,6 +329,13 @@
                         return response.json();
                     })
                     .then(response_data => {
+                        // Calcular tiempo de consulta
+                        const finTiempo = performance.now();
+                        const tiempoConsulta = (finTiempo - inicioTiempo) / 1000; // Convertir a segundos
+                        
+                        // Ocultar loader
+                        document.getElementById('loader').classList.add('hidden');
+                        
                         currentPaymentsData = response_data.data; // Almacena los datos para el modal
 
                         pagosTableBody.innerHTML = '';
@@ -338,6 +373,15 @@
                                 pagosTableBody.appendChild(row);
                             });
 
+                            // Mostrar tiempo de consulta
+                            tiempoConsultaFooter.innerHTML = `
+                                <tr>
+                                    <td colspan="7" class="border-t border-gray-200 px-4 py-2 text-sm text-gray-500">
+                                        Tiempo de consulta: ${tiempoConsulta.toFixed(4)} segundos
+                                    </td>
+                                </tr>
+                            `;
+
                             if (paginationInfoDiv) {
                                 const displayedCount = pagos.length;
                                 const startCount = displayedCount > 0 ? 1 : 0;
@@ -372,7 +416,9 @@
                     })
                     .catch(error => {
                         console.error('Error al obtener los pagos:', error);
+                        document.getElementById('loader').classList.add('hidden');
                         pagosTableBody.innerHTML = `<tr><td colspan="7" class="border border-gray-200 px-4 py-2 text-center text-red-500">Error al cargar los pagos. Inténtelo de nuevo. Detalles en consola.</td></tr>`;
+                        tiempoConsultaFooter.innerHTML = '';
                         if (paginationInfoDiv) {
                             paginationInfoDiv.querySelector('.text-gray-700').textContent = '';
                         }
@@ -490,8 +536,5 @@ confirmLogoutButton.addEventListener('click', function() {
         logoutModal.classList.add('hidden'); 
     });
     </script>
-    </script>
-
-
 </body>
 </html>

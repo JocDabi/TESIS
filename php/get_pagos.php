@@ -33,6 +33,22 @@ if ($all_pagos === NULL) {
 // --- Lógica para Recibir y Aplicar Filtros ---
 $filtered_pagos = $all_pagos; // Empezamos con todos los pagos
 
+// Agrega esto en la sección donde procesas los parámetros GET (antes de aplicar los filtros)
+$orden = $_GET['order'] ?? 'desc'; // 'asc' o 'desc'
+$ordenar_por = $_GET['order_by'] ?? 'createdAt'; // Campo por el que ordenar
+
+// --- Ordenación ---
+usort($filtered_pagos, function($a, $b) use ($ordenar_por, $orden) {
+    $valorA = $a[$ordenar_por] ?? '';
+    $valorB = $b[$ordenar_por] ?? '';
+    
+    if ($orden === 'asc') {
+        return $valorA <=> $valorB;
+    } else {
+        return $valorB <=> $valorA;
+    }
+});
+
 // Recibir parámetros de filtro del frontend (usando GET)
 $filtro_fecha_inicio = $_GET['fecha_inicio'] ?? '';
 $filtro_fecha_fin = $_GET['fecha_fin'] ?? '';

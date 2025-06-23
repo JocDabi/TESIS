@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="icon" href="./img/Recurso 1.png">
+    <link rel="icon" href="../img/logo.png">
     <style>
         * {
             font-family: "Montserrat", sans-serif;
@@ -38,7 +38,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col min-h-screen">
+<body class="bg-cover bg-left flex flex-col min-h-screen" style="background-image: url('../img/background.png');">
     <nav class="bg-white shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -47,22 +47,24 @@
                     <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
                         <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
                     </a>
-
-                    <div class="dropdown relative">
-                        <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
-                            Transacciones
-                        </button>
-                        <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                            <a href="./monitorear_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos realizados</a>
-                            <a href="./identificar_pagos_fuera_fecha.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos fuera de fecha</a>
+                        <div class="dropdown relative">
+                            <button
+                                class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                                Transacciones
+                            </button>
+                            <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
+                                <a href="./monitorear_pagos.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear y
+                                    detectar transacciones</a>
+                                
+                            </div>
                         </div>
-                    </div>
                     <div class="dropdown relative">
                         <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
                             Reportes y gráficos
                         </button>
                         <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                            <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de pagos</a>
+                            <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar Lista de transacciones</a>
                             <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
                         </div>
                     </div>
@@ -87,15 +89,16 @@
     </div>
 </nav>
 
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"> 
-        <div class="px-4 py-6 sm:px-0">
-            <img src="../img/logo.png" alt="" width="400px" height="400px">
-        </div>
-    </main>
+  <main class="flex-grow">
+    <div class="max-w-7xl mx-auto py-16 sm:px-6 lg:px-8 text-center text-white">
+      <!-- Contenido principal -->
+    </div>
+  </main>
 
-    <footer class="bg-gray-800 text-white text-center py-4 mt-auto"> 
-        <p>&copy; 2025 DCM Development. Todos los derechos reservados.</p>
-    </footer>
+
+<footer class="text-white text-center py-4 bg-transparent">
+    <p>&copy; 2025 DCM Development. Todos los derechos reservados.</p>
+</footer>
 
     
     <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
@@ -165,5 +168,6 @@ confirmLogoutButton.addEventListener('click', function() {
     </script>
     </script>
 
+    
 </body>
 </html>

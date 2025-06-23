@@ -73,7 +73,7 @@ $pdf->Image('../public/img/logo.png', 15, 8, 60); // Aumenta el ancho a 45, ajus
 // Título del reporte
 $pdf->SetY(15); // Posición vertical después del logo
 $pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'REPORTE DE PAGOS'), 0, 1, 'C');
+$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'REPORTE DE TRANSACCIONES'), 0, 1, 'C');
 
 // Fecha de generación
 $pdf->SetFont('Arial', '', 10);
@@ -102,18 +102,21 @@ $pdf->Ln(25); // Más espacio después del membrete
 
 // --- CONTENIDO PRINCIPAL ---
 $pdf->SetFont('Arial', 'B', 14);
-$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Lista de Pagos'), 0, 1, 'C');
+$pdf->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Lista de Transacciones'), 0, 1, 'C');
 $pdf->Ln(8);
 
-// Encabezados de la tabla
+// Encabezados de la tabla (con anchos ajustados)
 $pdf->SetFont('Arial', 'B', 10);
 $pdf->SetFillColor(200, 220, 255);
-$pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
-$pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);
-$pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Monto'), 1, 0, 'C', true);
-$pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);
-$pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
-$pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
+$pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);          // Reducido de 25 a 20
+$pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);       // Reducido de 35 a 25
+$pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Curso'), 1, 0, 'C', true);       // Nueva columna
+$pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Monto'), 1, 0, 'C', true);       // Mantenido en 20
+$pdf->Cell(40, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);  // Reducido de 50 a 40
+$pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);       // Reducido de 30 a 25
+$pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);      // Reducido de 30 a 25
+
+// Total: 20+25+35+20+40+25+25 = 190 (dentro del margen de 195)
 
 // Cuerpo de la tabla
 $pdf->SetFont('Arial', '', 9);
@@ -125,33 +128,37 @@ if (empty($pagos)) {
         // Verificar si necesita nueva página
         if ($pdf->GetY() > 250) {
             $pdf->AddPage();
-            // Volver a dibujar los encabezados de la tabla en la nueva página
+            // Volver a dibujar los encabezados en la nueva página
             $pdf->SetFont('Arial', 'B', 10);
             $pdf->SetFillColor(200, 220, 255);
-            $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
-            $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);
+            $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'ID'), 1, 0, 'C', true);
+            $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Fecha'), 1, 0, 'C', true);
+            $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Curso'), 1, 0, 'C', true);
             $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Monto'), 1, 0, 'C', true);
-            $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);
-            $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
-            $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
+            $pdf->Cell(40, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Descripción'), 1, 0, 'C', true);
+            $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Estado'), 1, 0, 'C', true);
+            $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', 'Usuario'), 1, 1, 'C', true);
             $pdf->SetFont('Arial', '', 9);
         }
 
         $id = substr($pago['id'], 0, 6) . '...';
         $fecha = substr($pago['createdAt'], 0, 10);
+        $curso = isset($pago['course']['name']) ? (strlen($pago['course']['name']) > 25 ? substr($pago['course']['name'], 0, 22) . '...' : $pago['course']['name']) : 'N/A';
         $monto = '$' . number_format((float)$pago['amount'], 2, ',', '.');
         $descripcion = strlen($pago['description']) > 30 ? substr($pago['description'], 0, 27) . '...' : $pago['description'];
         $estado = $pago['status'];
         $usuario = isset($pago['user']['firstName']) ? $pago['user']['firstName'] . ' ' . $pago['user']['lastName'] : 'N/A';
 
-        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $id), 1);
-        $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $fecha), 1);
+        $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $id), 1);
+        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $fecha), 1);
+        $pdf->Cell(35, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $curso), 1);
         $pdf->Cell(20, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $monto), 1, 0, 'R');
-        $pdf->Cell(50, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $descripcion), 1);
-        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $estado), 1);
-        $pdf->Cell(30, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $usuario), 1, 1);
+        $pdf->Cell(40, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $descripcion), 1);
+        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $estado), 1);
+        $pdf->Cell(25, 8, iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $usuario), 1, 1);
     }
 }
+
 
 // Salida
 $pdf->Output('reporte_pagos.pdf', 'I');

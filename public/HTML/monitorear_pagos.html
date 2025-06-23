@@ -4,14 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitorear Pagos Realizados</title>
+    <title>Monitorear y detectar transacciones</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-    <link rel="icon" href="./img/Recurso 1.png">
+    <link rel="icon" href="../img/logo.png">
     <style>
+        /* Animación para la notificación */
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+
+        /* Transición para el indicador de actualización */
+        .refresh-indicator-enter-active,
+        .refresh-indicator-leave-active {
+            transition: all 0.5s ease;
+        }
+
+        .refresh-indicator-enter,
+        .refresh-indicator-leave-to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
         * {
             font-family: "Montserrat", sans-serif;
         }
@@ -44,12 +73,18 @@
             background-color: #f7fafc;
             color: #1a202c;
         }
-        
+
         /* Animación para el spinner de carga */
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .animate-spin {
             animation: spin 1s linear infinite;
         }
@@ -75,11 +110,9 @@
                             </button>
                             <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
                                 <a href="./monitorear_pagos.html"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear pagos
-                                    realizados</a>
-                                <a href="./identificar_pagos_fuera_fecha.html"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Identificar pagos
-                                    fuera de fecha</a>
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear y
+                                    detectar transacciones</a>
+
                             </div>
                         </div>
                         <div class="dropdown relative">
@@ -89,8 +122,8 @@
                             </button>
                             <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
                                 <a href="./generar_lista_pagos.html"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar lista de
-                                    pagos</a>
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar Lista de
+                                    transacciones</a>
                                 <a href="./generar_graficos_estadisticas_transacciones.html"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de
                                     estadísticas de las transacciones</a>
@@ -102,11 +135,16 @@
                                 Ayuda
                             </button>
                             <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
+                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view"
+                                    target="_blank" rel="noopener"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de
+                                    usuario</a>
 
-                                <a href="./preguntas_frecuentes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas
+                                <a href="./preguntas_frecuentes.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas
                                     frecuentes</a>
-                                <a href="./informacion_sistema.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información
+                                <a href="./informacion_sistema.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información
                                     del sistema</a>
                             </div>
                         </div>
@@ -136,7 +174,7 @@
         <div class="px-4 py-6 sm:px-0">
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
-                    <h2 class="text-xl font-semibold text-gray-800">Monitoreo de Pagos Realizados</h2>
+                    <h2 class="text-xl font-semibold text-gray-800">Monitoreo y detección de transacciones</h2>
                 </div>
 
                 <div class="p-6">
@@ -179,14 +217,6 @@
                                 <option value="100">100</option>
                                 <option value="250">250</option>
                             </select>
-                        </div>
-
-                        <div class="relative">
-                            <button id="btnFiltrarPagos"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                type="button">
-                                Filtrar
-                            </button>
                         </div>
                     </div>
 
@@ -237,24 +267,27 @@
     <div id="paymentDetailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="mt-3 text-center">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Detalles del Pago</h3>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Detalles de la transacción</h3>
                 <div class="mt-2 px-7 py-3 text-left">
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 mt-4">
+                        <strong>Información del pago:</strong>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4 ">
                         <strong>ID Pago:</strong> <span id="modal-id-pago"></span>
                     </p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 ml-4">
                         <strong>Fecha:</strong> <span id="modal-fecha-pago"></span>
                     </p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 ml-4">
                         <strong>Monto:</strong> <span id="modal-monto-pago"></span>
                     </p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 ml-4">
                         <strong>Descripción:</strong> <span id="modal-descripcion-pago"></span>
                     </p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 ml-4">
                         <strong>Método de Pago:</strong> <span id="modal-metodo-pago"></span>
                     </p>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 ml-4">
                         <strong>Estado:</strong> <span id="modal-estado-pago"></span>
                     </p>
                     <p class="text-sm text-gray-500 mt-4">
@@ -268,6 +301,22 @@
                     </p>
                     <p class="text-sm text-gray-500 ml-4">
                         <strong>Identificación:</strong> <span id="modal-user-id-number"></span>
+                    </p>
+                    <!-- Nueva sección de información del curso -->
+                    <p class="text-sm text-gray-500 mt-4">
+                        <strong>Información del Curso:</strong>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>ID Curso:</strong> <span id="modal-course-id"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>Fecha Creación:</strong> <span id="modal-course-created"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>Nombre:</strong> <span id="modal-course-name"></span>
+                    </p>
+                    <p class="text-sm text-gray-500 ml-4">
+                        <strong>Descripción:</strong> <span id="modal-course-description"></span>
                     </p>
                 </div>
                 <div class="items-center px-4 py-3">
@@ -303,7 +352,7 @@
         </div>
     </div>
     <script>
-        
+
         async function cargarPagos() {
             const registrosPorPagina = parseInt(document.getElementById("registrosPorPagina").value);
             const fechaInicio = document.getElementById("filtro-fecha-inicio").value;
@@ -391,7 +440,6 @@
             const filtroFechaInicio = document.getElementById('filtro-fecha-inicio');
             const filtroFechaFin = document.getElementById('filtro-fecha-fin');
             const filtroEstado = document.getElementById('filtro-estado');
-            const btnFiltrar = document.getElementById('btnFiltrarPagos');
             const selectPaginas = document.getElementById('selectPaginas');
             const tiempoConsultaFooter = document.getElementById('tiempoConsultaFooter');
 
@@ -408,6 +456,11 @@
             const modalUserName = document.getElementById('modal-user-name');
             const modalUserEmail = document.getElementById('modal-user-email');
             const modalUserIdNumber = document.getElementById('modal-user-id-number');
+            // Nuevas referencias para el curso
+            const modalCourseId = document.getElementById('modal-course-id');
+            const modalCourseCreated = document.getElementById('modal-course-created');
+            const modalCourseName = document.getElementById('modal-course-name');
+            const modalCourseDescription = document.getElementById('modal-course-description');
             // --- Fin Referencias del Modal ---
 
             let currentPaymentsData = []; // Variable para almacenar los pagos actualmente cargados
@@ -434,13 +487,13 @@
             function fetchAndDisplayPayments(filters = {}, pagina = 1, limite = 25) {
                 // Mostrar loader
                 document.getElementById('loader').classList.remove('hidden');
-                
+
                 // Limpiar tabla
                 pagosTableBody.innerHTML = `<tr><td colspan="6" class="border border-gray-200 px-4 py-2 text-center text-gray-500">Cargando pagos...</td></tr>`;
-                
+
                 // Limpiar tiempo de consulta anterior
                 tiempoConsultaFooter.innerHTML = '';
-                
+
                 // Iniciar medición de tiempo
                 const inicioTiempo = performance.now();
 
@@ -463,10 +516,10 @@
                         // Calcular tiempo de consulta
                         const finTiempo = performance.now();
                         const tiempoConsulta = (finTiempo - inicioTiempo) / 1000; // Convertir a segundos
-                        
+
                         // Ocultar loader
                         document.getElementById('loader').classList.add('hidden');
-                        
+
                         currentPaymentsData = response_data.data;
                         pagosTableBody.innerHTML = '';
 
@@ -562,6 +615,7 @@
                     });
             }
 
+
             // --- Nueva Función para Mostrar Detalles del Pago en un Modal ---
             function displayPaymentDetailsModal(pagoId) {
                 const pago = currentPaymentsData.find(p => p.id === pagoId);
@@ -579,6 +633,12 @@
                     modalUserName.textContent = (pago.user && pago.user.firstName && pago.user.lastName) ? `${pago.user.firstName} ${pago.user.lastName}` : 'Desconocido';
                     modalUserEmail.textContent = (pago.user && pago.user.email) ? pago.user.email : 'N/A';
                     modalUserIdNumber.textContent = (pago.user && pago.user.identificationNumber) ? pago.user.identificationNumber : 'N/A';
+
+                    // Nueva información del curso
+                    modalCourseId.textContent = (pago.course && pago.course.id) ? pago.course.id : 'N/A';
+                    modalCourseCreated.textContent = (pago.course && pago.course.createdAt) ? pago.course.createdAt.split('T')[0] : 'N/A';
+                    modalCourseName.textContent = (pago.course && pago.course.name) ? pago.course.name : 'N/A';
+                    modalCourseDescription.textContent = (pago.course && pago.course.description) ? pago.course.description : 'N/A';
 
                     paymentDetailModal.classList.remove('hidden');
                 } else {
@@ -603,18 +663,16 @@
                 });
             }
 
-            // === Evento para el botón Filtrar ===
-            if (btnFiltrar) {
-                btnFiltrar.addEventListener('click', function () {
-                    paginaActual = 1;
-                    const filters = {
-                        fecha_inicio: filtroFechaInicio.value,
-                        fecha_fin: filtroFechaFin.value,
-                        estado: filtroEstado.value
-                    };
-                    fetchAndDisplayPayments(filters, paginaActual, parseInt(selectPaginas.value));
-                });
-            }
+            // Evento para el select de estado que filtra automáticamente
+            filtroEstado.addEventListener('change', function () {
+                paginaActual = 1;
+                const filters = {
+                    fecha_inicio: filtroFechaInicio.value,
+                    fecha_fin: filtroFechaFin.value,
+                    estado: this.value
+                };
+                fetchAndDisplayPayments(filters, paginaActual, parseInt(selectPaginas.value));
+            });
 
             // Evento para el select de cantidad de páginas:
             selectPaginas.addEventListener('change', function () {
@@ -698,7 +756,205 @@
             logoutModal.classList.add('hidden');
         });
     </script>
-    
+
+    <script>
+ // Variables globales para el polling y estado de la aplicación
+    let pollingInterval = 15000; // 15 segundos (ajusta según necesites)
+    let pollingTimer = null;
+    let lastPaymentId = null;
+    let paginaActual = 1; // Definir la variable globalmente
+    let selectPaginas = document.getElementById('selectPaginas'); // Definir globalmente
+
+    // Referencias a elementos del DOM (definirlas globalmente)
+    const filtroFechaInicio = document.getElementById('filtro-fecha-inicio');
+    const filtroFechaFin = document.getElementById('filtro-fecha-fin');
+    const filtroEstado = document.getElementById('filtro-estado');
+    const paymentDetailModal = document.getElementById('paymentDetailModal');
+
+    // Función para obtener los filtros actuales
+    function getCurrentFilters() {
+        return {
+            fecha_inicio: filtroFechaInicio.value,
+            fecha_fin: filtroFechaFin.value,
+            estado: filtroEstado.value
+        };
+    }
+
+    // Función para iniciar el polling
+    function startPolling() {
+        // Detener cualquier polling existente
+        stopPolling();
+        
+        // Obtener los filtros actuales
+        const filters = getCurrentFilters();
+        
+        // Hacer la primera verificación inmediatamente
+        checkForNewPayments(filters);
+        
+        // Configurar el intervalo para verificaciones periódicas
+        pollingTimer = setInterval(() => {
+            checkForNewPayments(filters);
+        }, pollingInterval);
+    }
+
+    // Función para detener el polling
+    function stopPolling() {
+        if (pollingTimer) {
+            clearInterval(pollingTimer);
+            pollingTimer = null;
+        }
+    }
+
+    // Función para verificar nuevos pagos
+    function checkForNewPayments(filters) {
+        // Mostrar indicador de actualización en la interfaz
+        showRefreshIndicator();
+        
+        // Hacer una consulta rápida para el último pago
+        fetch(`../../php/get_pagos.php?${new URLSearchParams({
+            ...filters,
+            pagina: 1,
+            limite: 1,
+            order: 'desc', // Ordenar por el más reciente primero
+            order_by: 'createdAt'
+        })}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error HTTP ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Ocultar indicador de actualización
+            hideRefreshIndicator();
+            
+            if (data.data && data.data.length > 0) {
+                const newestPayment = data.data[0];
+                
+                // Si es la primera verificación o si hay un pago nuevo
+                if (lastPaymentId === null || newestPayment.id !== lastPaymentId) {
+                    // Actualizar el ID del último pago conocido
+                    lastPaymentId = newestPayment.id;
+                    
+                    // Solo recargar si estamos en la primera página
+                    if (paginaActual === 1) {
+                        // Llamar a la función principal de carga de datos
+                        if (typeof fetchAndDisplayPayments === 'function') {
+                            fetchAndDisplayPayments(filters, paginaActual, parseInt(selectPaginas.value));
+                        } else {
+                            console.error('fetchAndDisplayPayments no está definida');
+                        }
+                    } else {
+                        // Mostrar notificación de nuevos pagos
+                        showNewPaymentsNotification();
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error en polling:', error);
+            hideRefreshIndicator();
+        });
+    }
+
+    // Función para mostrar notificación de nuevos pagos
+    function showNewPaymentsNotification() {
+        // Si ya hay una notificación, no mostrar otra
+        if (document.getElementById('new-payments-notification')) {
+            return;
+        }
+        
+        const notification = document.createElement('div');
+        notification.id = 'new-payments-notification';
+        notification.className = 'fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded shadow-lg cursor-pointer animate-bounce';
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                </svg>
+                <span>Hay nuevos pagos disponibles. <u>Click para actualizar</u></span>
+            </div>
+        `;
+        
+        notification.addEventListener('click', () => {
+            const filters = getCurrentFilters();
+            paginaActual = 1;
+            if (typeof fetchAndDisplayPayments === 'function') {
+                fetchAndDisplayPayments(filters, paginaActual, parseInt(selectPaginas.value));
+            }
+            notification.remove();
+        });
+        
+        document.body.appendChild(notification);
+        
+        // Auto-ocultar después de 15 segundos
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 15000);
+    }
+
+    // Función para mostrar indicador de actualización
+    function showRefreshIndicator() {
+        const existingIndicator = document.getElementById('refresh-indicator');
+        if (existingIndicator) return;
+        
+        const indicator = document.createElement('div');
+        indicator.id = 'refresh-indicator';
+        indicator.className = 'fixed top-4 right-4 bg-white shadow-md rounded-full p-2 flex items-center';
+        indicator.innerHTML = `
+            <svg class="animate-spin h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="ml-2 text-sm text-gray-600">Buscando actualizaciones...</span>
+        `;
+        
+        document.body.appendChild(indicator);
+    }
+
+    // Función para ocultar indicador de actualización
+    function hideRefreshIndicator() {
+        const indicator = document.getElementById('refresh-indicator');
+        if (indicator && indicator.parentNode) {
+            indicator.parentNode.removeChild(indicator);
+        }
+    }
+
+    // Iniciar el polling cuando la página está lista
+    document.addEventListener('DOMContentLoaded', function() {
+        // Iniciar el polling después de la primera carga de datos
+        startPolling();
+        
+        // Pausar el polling cuando el modal está abierto
+        if (paymentDetailModal) {
+            paymentDetailModal.addEventListener('mouseenter', stopPolling);
+            paymentDetailModal.addEventListener('mouseleave', startPolling);
+        }
+        
+        // Reiniciar el polling cuando cambian los filtros
+        [filtroFechaInicio, filtroFechaFin, filtroEstado].forEach(element => {
+            if (element) {
+                element.addEventListener('change', () => {
+                    lastPaymentId = null; // Resetear para forzar una nueva comparación
+                    startPolling();
+                });
+            }
+        });
+        
+        // Ajustar el intervalo según la selección de páginas
+        if (selectPaginas) {
+            selectPaginas.addEventListener('change', () => {
+                // Si el usuario selecciona mostrar más elementos, podemos hacer polling menos frecuente
+                const limit = parseInt(selectPaginas.value);
+                pollingInterval = limit > 50 ? 60000 : 30000; // 60 segundos para límites grandes
+                startPolling();
+            });
+        }
+    });
+    </script>
+
 
 </body>
 

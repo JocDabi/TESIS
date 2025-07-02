@@ -71,7 +71,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body cclass="bg-cover bg-left flex flex-col min-h-screen" style="background-image: url('../img/background.png');">
     <!-- Loader -->
     <div id="loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
         <div class="bg-white p-6 rounded-lg shadow-xl text-center">
@@ -474,35 +474,126 @@
                     'rejected': 'Rechazado'
                 };
                 
+                // Definir colores personalizados para cada estado
+                const statusColors = {
+                    'completed': {
+                        background: 'rgba(75, 192, 192, 0.7)', // Verde
+                        border: 'rgba(75, 192, 192, 1)'
+                    },
+                    'ready_to_be_checked': {
+                        background: 'rgba(255, 206, 86, 0.7)', // Amarillo
+                        border: 'rgba(255, 206, 86, 1)'
+                    },
+                    'rejected': {
+                        background: 'rgba(255, 99, 132, 0.7)', // Rojo
+                        border: 'rgba(255, 99, 132, 1)'
+                    }
+                };
+                
                 // Gráfico de conteo por estado
                 const statusLabelsArr = Object.keys(statusCounts).map(key => statusLabels[key] || key);
                 const statusData = Object.values(statusCounts);
+                const statusBackgroundColors = Object.keys(statusCounts).map(key => statusColors[key]?.background || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
+                const statusBorderColors = Object.keys(statusCounts).map(key => statusColors[key]?.border || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`);
                 
                 chartInstances.statusChart = new Chart(
                     document.getElementById('statusChart'),
-                    getChartConfig(
-                        'doughnut',
-                        statusLabelsArr,
-                        statusData,
-                        'Transacciones por Estado',
-                        true
-                    )
+                    {
+                        type: 'doughnut',
+                        data: {
+                            labels: statusLabelsArr,
+                            datasets: [{
+                                label: 'Transacciones por Estado',
+                                data: statusData,
+                                backgroundColor: statusBackgroundColors,
+                                borderColor: statusBorderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Transacciones por Estado',
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    position: 'right',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw;
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = Math.round((value / total) * 100);
+                                            return `${label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
                 
                 // Gráfico de monto por estado
                 const amountLabelsArr = Object.keys(amountByStatus).map(key => statusLabels[key] || key);
                 const amountData = Object.values(amountByStatus);
+                const amountBackgroundColors = Object.keys(amountByStatus).map(key => statusColors[key]?.background || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
+                const amountBorderColors = Object.keys(amountByStatus).map(key => statusColors[key]?.border || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`);
                 
                 chartInstances.amountStatusChart = new Chart(
                     document.getElementById('amountStatusChart'),
-                    getChartConfig(
-                        'bar',
-                        amountLabelsArr,
-                        amountData,
-                        'Monto por Estado (USD)',
-                        false,
-                        true
-                    )
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: amountLabelsArr,
+                            datasets: [{
+                                label: 'Monto por Estado (USD)',
+                                data: amountData,
+                                backgroundColor: amountBackgroundColors,
+                                borderColor: amountBorderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Monto por Estado (USD)',
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${formatMoney(context.raw)}`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return formatMoney(value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
             }
             
@@ -516,15 +607,65 @@
                 const courseLabels = topCourses.map(item => item[0]);
                 const courseData = topCourses.map(item => item[1]);
                 
+                // Colores para los cursos
+                const backgroundColors = courseLabels.map((_, i) => {
+                    const hue = (i * 360 / courseLabels.length) % 360;
+                    return `hsla(${hue}, 70%, 60%, 0.7)`;
+                });
+                
+                const borderColors = courseLabels.map((_, i) => {
+                    const hue = (i * 360 / courseLabels.length) % 360;
+                    return `hsl(${hue}, 70%, 60%)`;
+                });
+                
                 chartInstances.courseChart = new Chart(
                     document.getElementById('courseChart'),
-                    getChartConfig(
-                        'bar',
-                        courseLabels,
-                        courseData,
-                        'Top 10 Cursos por Transacciones',
-                        false
-                    )
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: courseLabels,
+                            datasets: [{
+                                label: 'Transacciones',
+                                data: courseData,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Top 10 Cursos por Transacciones',
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${context.raw.toLocaleString()}`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
                 
                 // Gráfico de monto por curso
@@ -537,14 +678,52 @@
                 
                 chartInstances.amountCourseChart = new Chart(
                     document.getElementById('amountCourseChart'),
-                    getChartConfig(
-                        'bar',
-                        amountCourseLabels,
-                        amountCourseData,
-                        'Top 10 Cursos por Monto (USD)',
-                        false,
-                        true
-                    )
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: amountCourseLabels,
+                            datasets: [{
+                                label: 'Monto (USD)',
+                                data: amountCourseData,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Top 10 Cursos por Monto (USD)',
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${formatMoney(context.raw)}`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return formatMoney(value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
             }
             
@@ -554,21 +733,64 @@
                     'paypal': 'PayPal',
                     'credit_card': 'Tarjeta de Crédito',
                     'bank_transfer': 'Transferencia Bancaria'
-                    // Agregar más mapeos según sea necesario
                 };
                 
                 const methodLabelsArr = Object.keys(methodCounts).map(key => methodLabels[key] || key);
                 const methodData = Object.values(methodCounts);
                 
+                // Colores para métodos de pago
+                const backgroundColors = methodLabelsArr.map((_, i) => {
+                    const hue = (i * 360 / methodLabelsArr.length) % 360;
+                    return `hsla(${hue}, 70%, 60%, 0.7)`;
+                });
+                
+                const borderColors = methodLabelsArr.map((_, i) => {
+                    const hue = (i * 360 / methodLabelsArr.length) % 360;
+                    return `hsl(${hue}, 70%, 60%)`;
+                });
+                
                 chartInstances.paymentMethodChart = new Chart(
                     document.getElementById('paymentMethodChart'),
-                    getChartConfig(
-                        'pie',
-                        methodLabelsArr,
-                        methodData,
-                        'Transacciones por Método',
-                        true
-                    )
+                    {
+                        type: 'pie',
+                        data: {
+                            labels: methodLabelsArr,
+                            datasets: [{
+                                label: 'Transacciones',
+                                data: methodData,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Transacciones por Método',
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    position: 'right',
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.raw;
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = Math.round((value / total) * 100);
+                                            return `${label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
                 
                 // Gráfico de monto por método
@@ -577,14 +799,52 @@
                 
                 chartInstances.amountPaymentMethodChart = new Chart(
                     document.getElementById('amountPaymentMethodChart'),
-                    getChartConfig(
-                        'bar',
-                        amountMethodLabelsArr,
-                        amountMethodData,
-                        'Monto por Método (USD)',
-                        false,
-                        true
-                    )
+                    {
+                        type: 'bar',
+                        data: {
+                            labels: amountMethodLabelsArr,
+                            datasets: [{
+                                label: 'Monto (USD)',
+                                data: amountMethodData,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Monto por Método (USD)',
+                                    font: {
+                                        size: 16
+                                    }
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return `${context.label}: ${formatMoney(context.raw)}`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return formatMoney(value);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 );
             }
             
@@ -675,87 +935,6 @@
                         options: timeOptions
                     }
                 );
-            }
-            
-            // Función auxiliar para configurar gráficos comunes
-            function getChartConfig(type, labels, data, title, showPercent = false, isMoney = false) {
-                const backgroundColors = labels.map((_, i) => {
-                    const hue = (i * 360 / labels.length) % 360;
-                    return `hsla(${hue}, 70%, 60%, 0.7)`;
-                });
-                
-                const borderColors = labels.map((_, i) => {
-                    const hue = (i * 360 / labels.length) % 360;
-                    return `hsl(${hue}, 70%, 60%)`;
-                });
-                
-                const config = {
-                    type: type,
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: title,
-                            data: data,
-                            backgroundColor: backgroundColors,
-                            borderColor: borderColors,
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: title,
-                                font: {
-                                    size: 16
-                                }
-                            },
-                            legend: {
-                                position: type === 'pie' || type === 'doughnut' ? 'right' : 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        const label = context.label || '';
-                                        const value = context.raw;
-                                        
-                                        if (showPercent) {
-                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                            const percentage = Math.round((value / total) * 100);
-                                            return `${label}: ${value} (${percentage}%)`;
-                                        }
-                                        
-                                        if (isMoney) {
-                                            return `${label}: ${formatMoney(value)}`;
-                                        }
-                                        
-                                        return `${label}: ${value.toLocaleString()}`;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                };
-                
-                if (type === 'bar') {
-                    config.options.scales = {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    if (isMoney) {
-                                        return formatMoney(value);
-                                    }
-                                    return value.toLocaleString();
-                                }
-                            }
-                        }
-                    };
-                }
-                
-                return config;
             }
             
             // Exportar datos

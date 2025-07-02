@@ -3,49 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <title>Iniciar sesión | E-Pay</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="icon" href="./img/Recurso 1.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+        }
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+        body {
+            background: url('../public/img/background2.png') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #3182ce, #63b3ed);
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            background: linear-gradient(135deg, #2b6cb0, #4299e1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+        }
+        .logo-container {
+            background: linear-gradient(135deg, #3182ce, #63b3ed);
+        }
+        .loading-spinner {
+            display: none;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 
-<style>
-    * {
-        font-family: "Montserrat", sans-serif;
-    }
-    .error-message {
-        color: red;
-        font-size: 0.875rem;
-        font-style: italic;
-        margin-top: 0.25rem;
-    }
-</style>
+<body>
+    <!-- Formulario de inicio de sesión -->
+    <div class="login-container">
+        <div class="text-center mb-8">
+            <div class="flex justify-center mb-4">
+                <div class="logo-container w-20 h-20 flex items-center justify-center rounded-full">
+                    <i class="fas fa-lock text-3xl text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-800">Bienvenido a E-Pay</h1>
+            <p class="text-gray-600 mt-2">Tu plataforma de evaluación de pagos</p>
+        </div>
 
-<body class="bg-gray-100 flex justify-center items-center h-screen">
-
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Iniciar sesión</h1>
-
-        <form id="loginForm" class="flex flex-col gap-4" action="php/login.php" method="post">
+        <form id="loginForm" class="flex flex-col gap-5" action="php/login.php" method="post">
             <div>
-                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                <input type="email" id="email" name="email" placeholder="Tu email" required  <!- type="email", id="email", name="email"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                <span id="email-error" class="error-message"></span>
+                <label for="user" class="block text-gray-700 text-sm font-bold mb-2">Usuario</label>
+                <div class="glass-card p-1 rounded-lg">
+                    <input type="text" id="user" name="user" placeholder="Tu nombre de usuario" required
+                        class="w-full py-3 px-4 bg-transparent border-0 focus:outline-none focus:ring-0">
+                </div>
+                <span id="user-error" class="error-message"></span>
             </div>
 
             <div>
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
-                <div class="relative">
+                <div class="glass-card p-1 rounded-lg relative">
                     <input type="password" id="password" name="contrasena" placeholder="Tu contraseña" required
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-3 py-2 text-gray-600">
-                        <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
+                        class="w-full py-3 px-4 bg-transparent border-0 focus:outline-none focus:ring-0">
+                    <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-4 text-gray-500">
+                        <i id="eye-icon" class="fas fa-eye"></i>
                     </button>
                 </div>
                 <script>
@@ -54,10 +113,12 @@
                         const eyeIcon = document.getElementById('eye-icon');
                         if (passwordInput.type === 'password') {
                             passwordInput.type = 'text';
-                            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7 1.274-4.057 5.065-7 9.542-7 1.086 0 2.13.176 3.125.502M15 12a3 3 0 11-6 0 3 3 0 016 0z" />';
+                            eyeIcon.classList.remove('fa-eye');
+                            eyeIcon.classList.add('fa-eye-slash');
                         } else {
                             passwordInput.type = 'password';
-                            eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+                            eyeIcon.classList.remove('fa-eye-slash');
+                            eyeIcon.classList.add('fa-eye');
                         }
                     }
                 </script>
@@ -65,31 +126,36 @@
             </div>
 
             <div class="flex items-center justify-end">
-                <a href="../php/recuperar_contrasena.php" class="inline-block align-baseline font-bold text-sm text-indigo-500 hover:text-indigo-800">
+                <a href="../php/recuperar_contrasena.php" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">
                     ¿Olvidaste tu contraseña?
                 </a>
             </div>
 
-            <div id="login-error" class="text-red-500 text-sm italic text-center"></div>
+            <div id="login-error" class="text-red-500 text-sm italic text-center py-2"></div>
 
-            <div class="flex items-center justify-center">
-                <button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                    Iniciar sesión
-                </button>
-            </div>
+            <button id="login-button" class="btn-login text-white font-bold py-3 px-4 rounded-lg focus:outline-none shadow-md flex justify-center items-center gap-2" type="submit">
+                <span id="login-text">Iniciar sesión</span>
+                <div id="login-spinner" class="loading-spinner"></div>
+            </button>
         </form>
-
-        <hr class="my-6 border-gray-300">
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.getElementById('loginForm');
             const loginErrorDiv = document.getElementById('login-error');
+            const loginButton = document.getElementById('login-button');
+            const loginText = document.getElementById('login-text');
+            const loginSpinner = document.getElementById('login-spinner');
 
             loginForm.addEventListener('submit', function(event) {
                 event.preventDefault();
-
                 limpiarErrores();
+                
+                // Mostrar estado de carga
+                loginButton.disabled = true;
+                loginText.textContent = "Verificando...";
+                loginSpinner.style.display = "block";
 
                 const formData = new FormData(loginForm);
 
@@ -99,13 +165,17 @@
                 })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error(`Error HTTP: ${response.status} ${response.statusText}`);
+                        throw new Error(`Error HTTP: ${response.status}`);
                     }
                     return response.json();
                 })
                 .then(data => {
                     if (data.success) {
-                        window.location.href = 'HTML/dashboard.html';
+                        // Animación de éxito antes de redirigir
+                        loginForm.classList.add('animate-pulse');
+                        setTimeout(() => {
+                            window.location.href = 'HTML/dashboard.html';
+                        }, 800);
                     } else {
                         if (data.errors) {
                             mostrarErrores(data.errors);
@@ -117,12 +187,18 @@
                 })
                 .catch(error => {
                     console.error('Error en la petición AJAX:', error);
-                    alert('Error al contactar el servidor. Inténtalo de nuevo.');
+                    loginErrorDiv.textContent = 'Error al contactar el servidor. Inténtalo de nuevo.';
+                })
+                .finally(() => {
+                    // Restaurar estado normal del botón
+                    loginButton.disabled = false;
+                    loginText.textContent = "Iniciar sesión";
+                    loginSpinner.style.display = "none";
                 });
             });
 
             function limpiarErrores() {
-                document.getElementById('email-error').textContent = ''; //<!- id="email-error" ->
+                document.getElementById('user-error').textContent = '';
                 document.getElementById('password-error').textContent = '';
                 loginErrorDiv.textContent = '';
             }
@@ -137,6 +213,5 @@
             }
         });
     </script>
-
 </body>
 </html>

@@ -15,13 +15,12 @@ if ($conn->connect_error) {
     exit();
 }
 
-$email = $_POST['email'] ?? '';// <!- Recibe $_POST['email'] ->
+$usuario = $_POST['user'] ?? '';  // Variable renombrada para claridad
 $contrasena = $_POST['contrasena'] ?? '';
 
-if (empty($email)) {
-    $errors['email'] = 'El email es obligatorio.'; //<!- Error de "email" ->
-} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $errors['email'] = 'Email no válido.'; //<!- Error de "email" ->
+// Validación solo de campo obligatorio (sin validación de email)
+if (empty($usuario)) {
+    $errors['user'] = 'El usuario es obligatorio.';
 }
 
 if (empty($contrasena)) {
@@ -31,7 +30,8 @@ if (empty($contrasena)) {
 if (!empty($errors)) {
     $response['errors'] = $errors;
 } else {
-    $sql = "SELECT * FROM usuario WHERE EMAIL = ?"; //<!- Consulta WHERE EMAIL = ? ->
+    // Corregido: usar columna USERNAME (mayúsculas)
+    $sql = "SELECT * FROM usuario WHERE USERNAME = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
@@ -40,21 +40,21 @@ if (!empty($errors)) {
         exit();
     }
 
-    $stmt->bind_param("s", $email); //<!- Bind param con $email ->
+    $stmt->bind_param("s", $usuario);
     $stmt->execute();
     $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
+    $usuarioRow = $result->fetch_assoc();  // Variable renombrada
 
-    if ($user) {
-        if (password_verify($contrasena, $user['CONTRASENA'])) {
-            $_SESSION['user_id'] = $user['ID_USUARIO'];
-            $_SESSION['user_nombre'] = $user['NOMBRE'];
+    if ($usuarioRow) {
+        if (password_verify($contrasena, $usuarioRow['CONTRASENA'])) {
+            $_SESSION['user_id'] = $usuarioRow['ID_USUARIO'];
+            $_SESSION['user_nombre'] = $usuarioRow['NOMBRE'];
             $response['success'] = true;
         } else {
             $response['login_error'] = "Contraseña incorrecta.";
         }
     } else {
-        $response['login_error'] = "El email no está registrado."; //<!- Error de "email" ->
+        $response['login_error'] = "Usuario no registrado.";  // Mensaje corregido
     }
 
     $stmt->close();

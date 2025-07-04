@@ -92,7 +92,7 @@
             <div>
                 <label for="user" class="block text-gray-700 text-sm font-bold mb-2">Usuario</label>
                 <div class="glass-card p-1 rounded-lg">
-                    <input type="text" id="user" name="user" placeholder="Tu nombre de usuario" required
+                    <input type="text" id="user" name="user" placeholder="Ingresa tu nombre de usuario" required
                         class="w-full py-3 px-4 bg-transparent border-0 focus:outline-none focus:ring-0">
                 </div>
                 <span id="user-error" class="error-message"></span>
@@ -101,7 +101,7 @@
             <div>
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
                 <div class="glass-card p-1 rounded-lg relative">
-                    <input type="password" id="password" name="contrasena" placeholder="Tu contraseña" required
+                    <input type="password" id="password" name="contrasena" placeholder="Ingresa tu contraseña" required
                         class="w-full py-3 px-4 bg-transparent border-0 focus:outline-none focus:ring-0">
                     <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 px-4 text-gray-500">
                         <i id="eye-icon" class="fas fa-eye"></i>

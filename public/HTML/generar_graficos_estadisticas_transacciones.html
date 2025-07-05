@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,28 +9,33 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/luxon@3.0.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.2.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             font-family: "Montserrat", sans-serif;
         }
+
         .dropdown:hover .dropdown-menu {
             display: block;
         }
+
         .dropdown-menu {
             display: none;
             position: absolute;
             background-color: white;
             border: 1px solid #e2e8f0;
             padding: 0.5rem 0;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
             min-width: 220px;
             z-index: 10;
         }
+
         .dropdown-menu a {
             padding: 0.75rem 1.25rem;
             display: block;
@@ -37,33 +43,46 @@
             transition: background-color 0.2s, color 0.2s;
             font-size: 0.9rem;
         }
+
         .dropdown-menu a:hover {
             background-color: #f7fafc;
             color: #1a202c;
         }
+
         /* Animación para el spinner de carga */
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         .animate-spin {
             animation: spin 1s linear infinite;
         }
+
         .chart-container {
             position: relative;
             height: 400px;
             width: 100%;
         }
+
         .card {
             transition: all 0.3s ease;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
+
         .tab-button {
             transition: all 0.2s ease;
         }
+
         .tab-button.active {
             border-bottom: 3px solid #3b82f6;
             color: #3b82f6;
@@ -71,6 +90,7 @@
         }
     </style>
 </head>
+
 <body cclass="bg-cover bg-left flex flex-col min-h-screen" style="background-image: url('../img/background.png');">
     <!-- Loader -->
     <div id="loader" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
@@ -87,7 +107,8 @@
             <div class="flex justify-between h-16">
                 <div class="flex w-full">
                     <div class="hidden md:ml-6 md:flex space-x-8">
-                        <a href="./dashboard.html" class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                        <a href="./dashboard.html"
+                            class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium flex items-center focus:outline-none">
                             <img src="../img/pagina-de-inicio.png" alt="Inicio" class="h-6 w-6">
                         </a>
 
@@ -100,32 +121,46 @@
                                 <a href="./monitorear_pagos.html"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Monitorear y
                                     detectar transacciones</a>
-                                
+
                             </div>
                         </div>
                         <div class="dropdown relative">
-                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                            <button
+                                class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
                                 Reportes y gráficos
                             </button>
                             <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                                <a href="./generar_lista_pagos.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar Lista de transacciones</a>
-                                <a href="./generar_graficos_estadisticas_transacciones.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de estadísticas de las transacciones</a>
+                                <a href="./generar_lista_pagos.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar Lista de
+                                    transacciones</a>
+                                <a href="./generar_graficos_estadisticas_transacciones.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Generar gráficos de
+                                    estadísticas de las transacciones</a>
                             </div>
                         </div>
                         <div class="dropdown relative">
-                            <button class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
+                            <button
+                                class="text-gray-700 hover:bg-gray-100 px-3 py-5 rounded-md text-sm font-medium focus:outline-none">
                                 Ayuda
                             </button>
                             <div class="dropdown-menu absolute mt-2 right-0 md:left-0">
-                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view" target="_blank" rel="noopener" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de usuario</a>
-                                <a href="./preguntas_frecuentes.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas frecuentes</a>
-                                <a href="./informacion_sistema.html" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del sistema</a>
+                                <a href="https://drive.google.com/file/d/14QMIce3wAl_U6npZcz1KIhUZXwEFyH54/view"
+                                    target="_blank" rel="noopener"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manual de
+                                    usuario</a>
+                                <a href="./preguntas_frecuentes.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Preguntas
+                                    frecuentes</a>
+                                <a href="./informacion_sistema.html"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Información del
+                                    sistema</a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="hidden md:flex items-center">
-                    <button id="logout-button" class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
+                    <button id="logout-button"
+                        class="text-gray-700 hover:bg-gray-100 px-3 py-2 rounded-md text-sm font-medium flex items-center focus:outline-none">
                         <img src="../img/cerrar-sesion-de-usuario.png" alt="Cerrar sesión" class="h-6 w-6">
                     </button>
                 </div>
@@ -137,27 +172,32 @@
         <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
             <div class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600">
                 <h1 class="text-2xl font-bold text-white">Estadisticas de Transacciones</h1>
-                <p class="text-blue-100">Visualización completa de las transacciones de la pasarela de pagos PayStudy</p>
+                <p class="text-blue-100">Visualización completa de las transacciones de la pasarela de pagos PayStudy
+                </p>
             </div>
-            
+
             <!-- Filtros -->
             <div class="p-6 border-b">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
-                        <input type="date" id="filtro-fecha-inicio" class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="date" id="filtro-fecha-inicio"
+                            class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
-                        <input type="date" id="filtro-fecha-fin" class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <input type="date" id="filtro-fecha-fin"
+                            class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="flex items-end">
-                        <button id="btnGenerarReporte" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
+                        <button id="btnGenerarReporte"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
                             <i class="fas fa-sync-alt mr-2"></i>Actualizar
                         </button>
                     </div>
                     <div class="flex items-end">
-                        <button id="btnExportar" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
+                        <button id="btnExportar"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
                             <i class="fas fa-file-export mr-2"></i>Exportar
                         </button>
                     </div>
@@ -167,7 +207,8 @@
             <!-- Pestañas -->
             <div class="border-b border-gray-200">
                 <nav class="flex -mb-px">
-                    <button id="tab-resumen" class="tab-button active py-4 px-6 text-center border-b-2 font-medium text-sm">
+                    <button id="tab-resumen"
+                        class="tab-button active py-4 px-6 text-center border-b-2 font-medium text-sm">
                         <i class="fas fa-chart-pie mr-2"></i>Resumen
                     </button>
                     <button id="tab-cursos" class="tab-button py-4 px-6 text-center border-b-2 font-medium text-sm">
@@ -298,7 +339,8 @@
         <p>&copy; 2025 Dcm Development. Todos los derechos reservados.</p>
     </footer>
 
-    <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
+    <div id="logoutModal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center z-50">
         <div class="relative p-5 border w-96 shadow-lg rounded-md bg-white">
             <div class="text-center">
                 <h3 class="text-lg leading-6 font-medium text-gray-900">Confirmar cierre de sesión</h3>
@@ -306,10 +348,12 @@
                     <p class="text-sm text-gray-500">¿Estás seguro de que quieres cerrar tu sesión?</p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="confirmLogout" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button id="confirmLogout"
+                        class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 sm:ml-3 sm:w-auto sm:text-sm">
                         Sí, cerrar sesión
                     </button>
-                    <button id="cancelLogout" class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                    <button id="cancelLogout"
+                        class="mt-3 px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-opacity-75 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                         Cancelar
                     </button>
                 </div>
@@ -318,17 +362,17 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Configuración inicial
             const loader = document.getElementById('loader');
             const loaderMessage = document.getElementById('loaderMessage');
-            
+
             // Elementos de filtro
             const filtroFechaInicio = document.getElementById('filtro-fecha-inicio');
             const filtroFechaFin = document.getElementById('filtro-fecha-fin');
             const btnGenerarReporte = document.getElementById('btnGenerarReporte');
             const btnExportar = document.getElementById('btnExportar');
-            
+
             // Pestañas
             const tabs = {
                 'tab-resumen': 'content-resumen',
@@ -336,16 +380,16 @@
                 'tab-metodos': 'content-metodos',
                 'tab-temporal': 'content-temporal'
             };
-            
+
             // Inicializar pestañas
             Object.keys(tabs).forEach(tabId => {
-                document.getElementById(tabId).addEventListener('click', function() {
+                document.getElementById(tabId).addEventListener('click', function () {
                     // Actualizar botones de pestaña
                     document.querySelectorAll('.tab-button').forEach(btn => {
                         btn.classList.remove('active');
                     });
                     this.classList.add('active');
-                    
+
                     // Mostrar contenido correspondiente
                     document.querySelectorAll('.tab-content').forEach(content => {
                         content.classList.add('hidden');
@@ -353,11 +397,11 @@
                     document.getElementById(tabs[tabId]).classList.remove('hidden');
                 });
             });
-            
+
             // Variables para almacenar datos y gráficos
             let chartInstances = {};
             let currentData = null;
-            
+
             // Funciones auxiliares
             function formatMoney(amount) {
                 return new Intl.NumberFormat('es-ES', {
@@ -365,34 +409,34 @@
                     currency: 'USD'
                 }).format(amount);
             }
-            
+
             function formatNumber(num) {
                 return new Intl.NumberFormat('es-ES').format(num);
             }
-            
+
             function showLoader(message) {
                 loaderMessage.textContent = message;
                 loader.classList.remove('hidden');
             }
-            
+
             function hideLoader() {
                 loader.classList.add('hidden');
             }
-            
+
             function destroyCharts() {
                 Object.values(chartInstances).forEach(chart => {
                     if (chart) chart.destroy();
                 });
                 chartInstances = {};
             }
-            
+
             // Función para obtener datos
             async function fetchData(filters = {}) {
                 showLoader('Cargando datos de transacciones...');
-                
+
                 try {
                     const apiUrlBase = '../../php/get_payment_stats.php';
-                    
+
                     const formattedFilters = {};
                     if (filters.fecha_inicio) {
                         formattedFilters.fecha_inicio = new Date(filters.fecha_inicio).toLocaleDateString('es-ES', {
@@ -408,22 +452,22 @@
                             day: '2-digit'
                         });
                     }
-                    
+
                     const queryParams = new URLSearchParams(formattedFilters).toString();
                     const apiUrl = `${apiUrlBase}?${queryParams}`;
-                    
+
                     const response = await fetch(apiUrl);
-                    
+
                     if (!response.ok) {
                         throw new Error(`Error HTTP ${response.status}: ${await response.text()}`);
                     }
-                    
+
                     const data = await response.json();
                     currentData = data;
-                    
+
                     updateSummary(data);
                     renderCharts(data);
-                    
+
                 } catch (error) {
                     console.error('Error al obtener datos:', error);
                     alert('Error al cargar los datos. Por favor intente nuevamente.');
@@ -431,41 +475,41 @@
                     hideLoader();
                 }
             }
-            
+
             // Actualizar resumen
             function updateSummary(data) {
                 const basic = data.basic_stats;
                 const amount = data.amount_stats;
-                
+
                 // Actualizar tarjetas de resumen
                 document.getElementById('total-transactions').textContent = formatNumber(basic.total_transactions);
                 document.getElementById('total-amount').textContent = formatMoney(basic.total_amount);
-                
+
                 const completionRate = (basic.status_counts.completed / basic.total_transactions * 100).toFixed(1);
                 document.getElementById('completion-rate').textContent = `${completionRate}%`;
             }
-            
+
             // Renderizar gráficos
             function renderCharts(data) {
                 destroyCharts();
-                
+
                 const basic = data.basic_stats;
                 const amount = data.amount_stats;
                 const time = data.time_stats;
-                
+
                 // Gráficos de estado
                 renderStatusChart(basic.status_counts, amount.by_status);
-                
+
                 // Gráficos por curso
                 renderCourseCharts(basic.course_counts, amount.by_course);
-                
+
                 // Gráficos por método de pago
                 renderPaymentMethodCharts(basic.payment_method_counts, amount.by_payment_method);
-                
+
                 // Gráficos temporales
                 renderTimeCharts(time.daily);
             }
-            
+
             // Gráficos de estado
             function renderStatusChart(statusCounts, amountByStatus) {
                 const statusLabels = {
@@ -473,7 +517,7 @@
                     'ready_to_be_checked': 'Pendiente',
                     'rejected': 'Rechazado'
                 };
-                
+
                 // Definir colores personalizados para cada estado
                 const statusColors = {
                     'completed': {
@@ -489,13 +533,13 @@
                         border: 'rgba(255, 99, 132, 1)'
                     }
                 };
-                
+
                 // Gráfico de conteo por estado
                 const statusLabelsArr = Object.keys(statusCounts).map(key => statusLabels[key] || key);
                 const statusData = Object.values(statusCounts);
                 const statusBackgroundColors = Object.keys(statusCounts).map(key => statusColors[key]?.background || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
                 const statusBorderColors = Object.keys(statusCounts).map(key => statusColors[key]?.border || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`);
-                
+
                 chartInstances.statusChart = new Chart(
                     document.getElementById('statusChart'),
                     {
@@ -526,7 +570,7 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             const label = context.label || '';
                                             const value = context.raw;
                                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -539,13 +583,13 @@
                         }
                     }
                 );
-                
+
                 // Gráfico de monto por estado
                 const amountLabelsArr = Object.keys(amountByStatus).map(key => statusLabels[key] || key);
                 const amountData = Object.values(amountByStatus);
                 const amountBackgroundColors = Object.keys(amountByStatus).map(key => statusColors[key]?.background || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.7)`);
                 const amountBorderColors = Object.keys(amountByStatus).map(key => statusColors[key]?.border || `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`);
-                
+
                 chartInstances.amountStatusChart = new Chart(
                     document.getElementById('amountStatusChart'),
                     {
@@ -576,7 +620,7 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             return `${context.label}: ${formatMoney(context.raw)}`;
                                         }
                                     }
@@ -586,7 +630,7 @@
                                 y: {
                                     beginAtZero: true,
                                     ticks: {
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             return formatMoney(value);
                                         }
                                     }
@@ -596,28 +640,28 @@
                     }
                 );
             }
-            
+
             // Gráficos por curso
             function renderCourseCharts(courseCounts, amountByCourse) {
                 // Limitar a los 10 principales cursos para mejor visualización
                 const topCourses = Object.entries(courseCounts)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 10);
-                
+
                 const courseLabels = topCourses.map(item => item[0]);
                 const courseData = topCourses.map(item => item[1]);
-                
+
                 // Colores para los cursos
                 const backgroundColors = courseLabels.map((_, i) => {
                     const hue = (i * 360 / courseLabels.length) % 360;
                     return `hsla(${hue}, 70%, 60%, 0.7)`;
                 });
-                
+
                 const borderColors = courseLabels.map((_, i) => {
                     const hue = (i * 360 / courseLabels.length) % 360;
                     return `hsl(${hue}, 70%, 60%)`;
                 });
-                
+
                 chartInstances.courseChart = new Chart(
                     document.getElementById('courseChart'),
                     {
@@ -648,7 +692,7 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             return `${context.label}: ${context.raw.toLocaleString()}`;
                                         }
                                     }
@@ -658,7 +702,7 @@
                                 y: {
                                     beginAtZero: true,
                                     ticks: {
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             return value.toLocaleString();
                                         }
                                     }
@@ -667,15 +711,15 @@
                         }
                     }
                 );
-                
+
                 // Gráfico de monto por curso
                 const topAmountCourses = Object.entries(amountByCourse)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 10);
-                
+
                 const amountCourseLabels = topAmountCourses.map(item => item[0]);
                 const amountCourseData = topAmountCourses.map(item => item[1]);
-                
+
                 chartInstances.amountCourseChart = new Chart(
                     document.getElementById('amountCourseChart'),
                     {
@@ -706,7 +750,7 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             return `${context.label}: ${formatMoney(context.raw)}`;
                                         }
                                     }
@@ -716,7 +760,7 @@
                                 y: {
                                     beginAtZero: true,
                                     ticks: {
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             return formatMoney(value);
                                         }
                                     }
@@ -726,7 +770,7 @@
                     }
                 );
             }
-            
+
             // Gráficos por método de pago
             function renderPaymentMethodCharts(methodCounts, amountByMethod) {
                 const methodLabels = {
@@ -734,21 +778,21 @@
                     'credit_card': 'Tarjeta de Crédito',
                     'bank_transfer': 'Transferencia Bancaria'
                 };
-                
+
                 const methodLabelsArr = Object.keys(methodCounts).map(key => methodLabels[key] || key);
                 const methodData = Object.values(methodCounts);
-                
+
                 // Colores para métodos de pago
                 const backgroundColors = methodLabelsArr.map((_, i) => {
                     const hue = (i * 360 / methodLabelsArr.length) % 360;
                     return `hsla(${hue}, 70%, 60%, 0.7)`;
                 });
-                
+
                 const borderColors = methodLabelsArr.map((_, i) => {
                     const hue = (i * 360 / methodLabelsArr.length) % 360;
                     return `hsl(${hue}, 70%, 60%)`;
                 });
-                
+
                 chartInstances.paymentMethodChart = new Chart(
                     document.getElementById('paymentMethodChart'),
                     {
@@ -779,7 +823,7 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             const label = context.label || '';
                                             const value = context.raw;
                                             const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -792,11 +836,11 @@
                         }
                     }
                 );
-                
+
                 // Gráfico de monto por método
                 const amountMethodLabelsArr = Object.keys(amountByMethod).map(key => methodLabels[key] || key);
                 const amountMethodData = Object.values(amountByMethod);
-                
+
                 chartInstances.amountPaymentMethodChart = new Chart(
                     document.getElementById('amountPaymentMethodChart'),
                     {
@@ -827,7 +871,7 @@
                                 },
                                 tooltip: {
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             return `${context.label}: ${formatMoney(context.raw)}`;
                                         }
                                     }
@@ -837,7 +881,7 @@
                                 y: {
                                     beginAtZero: true,
                                     ticks: {
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             return formatMoney(value);
                                         }
                                     }
@@ -847,13 +891,13 @@
                     }
                 );
             }
-            
+
             // Gráficos temporales
             function renderTimeCharts(dailyData) {
                 const dates = Object.keys(dailyData).sort();
                 const dailyCounts = dates.map(date => dailyData[date].count);
                 const dailyAmounts = dates.map(date => dailyData[date].amount);
-                
+
                 // Configuración común para gráficos temporales
                 const timeOptions = {
                     responsive: true,
@@ -884,14 +928,14 @@
                     plugins: {
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return `${context.dataset.label}: ${context.raw.toLocaleString()}`;
                                 }
                             }
                         }
                     }
                 };
-                
+
                 // Gráfico de conteo diario
                 chartInstances.dailyTransactionsChart = new Chart(
                     document.getElementById('dailyTransactionsChart'),
@@ -912,10 +956,10 @@
                         options: timeOptions
                     }
                 );
-                
+
                 // Gráfico de monto diario
                 timeOptions.scales.y.title.text = 'Monto (USD)';
-                
+
                 chartInstances.dailyAmountChart = new Chart(
                     document.getElementById('dailyAmountChart'),
                     {
@@ -936,53 +980,58 @@
                     }
                 );
             }
-            
+
             // Exportar datos
-            btnExportar.addEventListener('click', function() {
+            btnExportar.addEventListener('click', function () {
                 if (!currentData) {
                     alert('No hay datos para exportar. Genere un reporte primero.');
                     return;
                 }
-                
+
                 // Crear un blob con los datos en formato JSON
                 const blob = new Blob([JSON.stringify(currentData, null, 2)], {
                     type: 'application/json'
                 });
-                
+
                 // Crear un enlace de descarga
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `reporte-transacciones-${new Date().toISOString().slice(0,10)}.json`;
+                a.download = `reporte-transacciones-${new Date().toISOString().slice(0, 10)}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
             });
-            
+
             // Evento para generar reporte
-            btnGenerarReporte.addEventListener('click', function() {
+            btnGenerarReporte.addEventListener('click', function () {
                 const filters = {
                     fecha_inicio: filtroFechaInicio.value,
                     fecha_fin: filtroFechaFin.value
                 };
-                
+
                 // Validación de fechas
                 if (filters.fecha_inicio && filters.fecha_fin && filters.fecha_inicio > filters.fecha_fin) {
-                    alert('La fecha de inicio no puede ser mayor que la fecha fin.');
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Oops...",
+                        text: "La fecha de inicio no puede ser mayor que la fecha fin.",
+                    });
                     return;
                 }
-                
+
+                // Si las fechas son válidas, generar el reporte
                 fetchData(filters);
             });
-            
+
             // Inicializar con datos del mes actual
             const today = new Date();
             const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-            
+
             filtroFechaInicio.valueAsDate = firstDayOfMonth;
             filtroFechaFin.valueAsDate = today;
-            
+
             fetchData({
                 fecha_inicio: filtroFechaInicio.value,
                 fecha_fin: filtroFechaFin.value
@@ -995,43 +1044,44 @@
         const cancelLogoutButton = document.getElementById('cancelLogout');
 
         // Mostrar el modal cuando se hace clic en "Cerrar sesión"
-        logoutButton.addEventListener('click', function(event) {
+        logoutButton.addEventListener('click', function (event) {
             event.preventDefault(); // Prevenir el comportamiento por defecto del enlace
             logoutModal.classList.remove('hidden');
         });
 
         // Ocultar el modal cuando se hace clic en "Cancelar"
-        cancelLogoutButton.addEventListener('click', function() {
+        cancelLogoutButton.addEventListener('click', function () {
             logoutModal.classList.add('hidden');
         });
 
         // Ocultar el modal si se hace clic fuera de él (opcional, pero buena UX)
-        logoutModal.addEventListener('click', function(event) {
+        logoutModal.addEventListener('click', function (event) {
             if (event.target === logoutModal) {
                 logoutModal.classList.add('hidden');
             }
         });
 
         // Lógica cuando se confirma el cierre de sesión
-        confirmLogoutButton.addEventListener('click', function() {
+        confirmLogoutButton.addEventListener('click', function () {
             // Aquí iría la lógica real para cerrar la sesión:
             // - Limpiar cookies/localStorage (ej. tokens de autenticación)
             // - Redirigir a la página de inicio de sesión o a la página principal.
 
             // Por ahora, solo simularemos la redirección
             console.log("Cerrando sesión...");
-            
+
             // Redirige a index.php
             window.location.href = '../index.php'; // Usa './index.php' si está en la misma carpeta raíz o similar
 
             // Si necesitas limpiar alguna data antes de la redirección, hazlo aquí.
             // Por ejemplo, para limpiar un token de autenticación en localStorage:
             // localStorage.removeItem('authToken'); 
-            
+
             // El modal se ocultará automáticamente con la redirección,
             // pero puedes mantener la línea si lo deseas para casos de prueba o si la redirección no ocurre inmediatamente.
-            logoutModal.classList.add('hidden'); 
+            logoutModal.classList.add('hidden');
         });
     </script>
 </body>
+
 </html>

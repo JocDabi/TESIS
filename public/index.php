@@ -174,7 +174,7 @@
                         // Animación de éxito antes de redirigir
                         loginForm.classList.add('animate-pulse');
                         setTimeout(() => {
-                            window.location.href = 'HTML/dashboard.html';
+                            window.location.href = '../HTML/dashboard.html';
                         }, 800);
                     } else {
                         if (data.errors) {
